@@ -19,4 +19,11 @@ public enum ErrorTypes implements ErrorType {
     public int getCode() {
         return code;
     }
+
+    @Override
+    public String toString() {
+        return "ErrorTypes{" +
+            "code=" + code +
+            '}';
+    }
 }

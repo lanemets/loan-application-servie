@@ -38,4 +38,12 @@ public class LoanResult<T> {
     public int hashCode() {
         return Objects.hash(result, errorResult);
     }
+
+    @Override
+    public String toString() {
+        return "LoanResult{" +
+            "result=" + result +
+            ", errorResult=" + errorResult +
+            '}';
+    }
 }

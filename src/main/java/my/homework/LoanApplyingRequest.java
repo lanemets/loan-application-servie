@@ -1,15 +1,19 @@
 package my.homework;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Objects;
 
 class LoanApplyingRequest {
 
+	@NotNull
 	private BigDecimal amount;
+	@NotNull
+	private Long personId;
+
 	private String term;
 	private String name;
 	private String surname;
-	private String personId;
 
 	public BigDecimal getAmount() {
 		return amount;
@@ -43,11 +47,11 @@ class LoanApplyingRequest {
 		this.surname = surname;
 	}
 
-	public String getPersonId() {
+	public Long getPersonId() {
 		return personId;
 	}
 
-	public void setPersonId(String personId) {
+	public void setPersonId(Long personId) {
 		this.personId = personId;
 	}
 
