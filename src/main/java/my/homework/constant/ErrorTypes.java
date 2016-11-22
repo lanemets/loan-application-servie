@@ -2,7 +2,7 @@ package my.homework.constant;
 
 public enum ErrorTypes implements ErrorType {
 
-    UNKNOWN(-32603);
+    UNKNOWN(-3000);
 
     private int code;
 

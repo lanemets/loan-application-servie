@@ -1,12 +1,15 @@
 package my.homework.service;
 
-import my.homework.LoanApplyingRequest;
+import my.homework.LoanApplicationRequest;
+
+import java.util.Collection;
+import java.util.UUID;
 
 public interface LoanService {
 
-    void apply(LoanApplyingRequest loanApplyingRequest);
+    void apply(LoanApplicationRequest loanApplicationRequest, UUID requestUid);
 
-    void tryApply(LoanApplyingRequest loanApplyingRequest);
+    Collection<Loan> getAllLoansApproved();
 
     LoanApplicationStatus getLoanApplicationStatus(Long personalId);
 }

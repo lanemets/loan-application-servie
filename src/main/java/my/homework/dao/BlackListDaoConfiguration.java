@@ -6,11 +6,11 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 
 @Configuration
-public class LoanDaoConfiguration {
+public class BlackListDaoConfiguration {
 
     @Bean
-    public LoanApplicationDao loanDao(DataSource dataSource) {
-        return new LoanApplicationDaoImpl(dataSource);
+    public BlackListedDao blackListedDao(DataSource dataSource) {
+        return new BlackListedDaoImpl(dataSource);
     }
 
 }

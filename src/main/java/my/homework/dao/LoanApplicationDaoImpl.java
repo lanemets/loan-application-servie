@@ -9,13 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.UUID;
 
-class LoanDaoImpl implements LoanDao {
+class LoanApplicationDaoImpl implements LoanApplicationDao {
 
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public LoanDaoImpl(DataSource dataSource) {
+    LoanApplicationDaoImpl(DataSource dataSource) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
             .withSchemaName(SCHEMA_NAME)
@@ -24,14 +24,21 @@ class LoanDaoImpl implements LoanDao {
 
     @Override
     @Transactional
-    public void addLoanApplication(long personalId, String name, String surname, String term, BigDecimal amount) {
+    public void addLoanApplication(
+        long personalId,
+        String name,
+        String surname,
+        String term,
+        BigDecimal amount,
+        UUID requestUid
+    ) {
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
             .addValue("personal_id", personalId)
             .addValue("name", name)
             .addValue("surname", surname)
             .addValue("term", term)
             .addValue("amount", amount)
-            .addValue("timestamp", LocalDateTime.now());
+            .addValue("request_uid", requestUid);
 
         simpleJdbcInsert.execute(sqlParameterSource);
     }

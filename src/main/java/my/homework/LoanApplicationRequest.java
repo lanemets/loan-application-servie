@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LoanApplyingRequest {
+public class LoanApplicationRequest {
 
     @NotNull
     private BigDecimal amount;
@@ -67,7 +67,7 @@ public class LoanApplyingRequest {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        LoanApplyingRequest that = (LoanApplyingRequest) o;
+        LoanApplicationRequest that = (LoanApplicationRequest) o;
         return Objects.equals(amount, that.amount) &&
             Objects.equals(term, that.term) &&
             Objects.equals(name, that.name) &&

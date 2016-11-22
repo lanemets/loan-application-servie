@@ -1,6 +1,6 @@
 package my.homework.controller;
 
-import my.homework.LoanApplyingRequest;
+import my.homework.LoanApplicationRequest;
 import my.homework.constant.ErrorResult;
 import my.homework.constant.ErrorTypes;
 import my.homework.constant.LoanResult;
@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
 
 @RestController
 public class OnlineController {
@@ -32,18 +34,33 @@ public class OnlineController {
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public LoanResult<?> apply(@RequestBody LoanApplyingRequest loanApplyingRequest) {
+    public LoanResult<?> apply(@RequestBody LoanApplicationRequest loanApplicationRequest) {
         try {
-            logger.debug("starting loan application request processing; personalId: {}", loanApplyingRequest.getPersonId());
-            loanService.apply(loanApplyingRequest);
+            logger.debug("starting loan application request processing; personalId: {}", loanApplicationRequest.getPersonId());
+            UUID requestUid = UUID.randomUUID();
+            loanService.apply(loanApplicationRequest, requestUid);
 
-            return new LoanResult<>("OK", null);
+            return new LoanResult<String>(requestUid.toString(), null);
         } catch (Exception exception) {
-            logger.debug("unexpected error has occurred during application process; personalId: {}", loanApplyingRequest.getPersonId());
+            logger.error("unexpected error has occurred during application process; personalId: {}", loanApplicationRequest.getPersonId());
             ErrorResult errorResult = new ErrorResult();
             errorResult.setCode(ErrorTypes.UNKNOWN);
 
-            return new LoanResult<>(null, errorResult);
+            return new LoanResult<String>(null, errorResult);
+        }
+    }
+
+    @RequestMapping(
+        value = "/loans_approved",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public LoanResult<?> getAllLoansApproved() {
+        try {
+            logger.debug("starting all loans approved retrieving;");
+            return null;
+        } catch (Exception exception) {
+            return null;
         }
     }
 

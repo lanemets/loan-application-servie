@@ -6,11 +6,11 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 
 @Configuration
-public class LoanDaoConfiguration {
+public class EventDaoConfiguration {
 
     @Bean
-    public LoanApplicationDao loanDao(DataSource dataSource) {
-        return new LoanApplicationDaoImpl(dataSource);
+    public EventDao eventDao(DataSource dataSource) {
+        return new EventDaoImpl(dataSource);
     }
 
 }
