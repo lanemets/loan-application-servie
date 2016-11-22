@@ -11,6 +11,7 @@ public class LoanManagerApplicationTests {
 
 	@Test
 	public void contextLoads() {
+
 	}
 
 }

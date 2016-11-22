@@ -1,4 +1,4 @@
-package my.homework;
+package my.homework.dao;
 
 import org.springframework.transaction.annotation.Transactional;
 

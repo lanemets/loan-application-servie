@@ -1,4 +1,4 @@
-package my.homework;
+package my.homework.constant;
 
 public enum ErrorTypes implements ErrorType {
 

@@ -1,8 +1,8 @@
-package my.homework;
+package my.homework.constant;
 
 import java.util.Objects;
 
-class ErrorResult {
+public class ErrorResult {
 
     private String message;
     private ErrorType code;

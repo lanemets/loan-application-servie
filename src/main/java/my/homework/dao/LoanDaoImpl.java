@@ -1,4 +1,4 @@
-package my.homework;
+package my.homework.dao;
 
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,8 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
-public class LoanDaoImpl implements LoanDao {
+class LoanDaoImpl implements LoanDao {
 
     private final SimpleJdbcInsert simpleJdbcInsert;
 
@@ -29,11 +30,12 @@ public class LoanDaoImpl implements LoanDao {
             .addValue("name", name)
             .addValue("surname", surname)
             .addValue("term", term)
-            .addValue("amount", amount);
+            .addValue("amount", amount)
+            .addValue("timestamp", LocalDateTime.now());
 
         simpleJdbcInsert.execute(sqlParameterSource);
     }
 
-    private static final String SCHEMA_NAME = "loan_app";
-    private static final String TABLE_NAME = "loan";
+    private static final String SCHEMA_NAME = "loan_applications_schema";
+    private static final String TABLE_NAME = "loan_application";
 }
