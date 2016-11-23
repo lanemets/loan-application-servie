@@ -12,9 +12,7 @@ class BlackListServiceImpl implements BlackListService {
     }
 
     @Override
-    public void checkBlackListedPersonalId(long personId) throws BlackListedPersonIdException {
-        if (blackListedDao.doesBlackListContainPersonalId(personId)) {
-            throw new BlackListedPersonIdException();
-        }
+    public boolean isPersonalIdBlackListed(long personId) throws BlackListedPersonIdException {
+        return blackListedDao.isPersonalIdBlackListed(personId);
     }
 }

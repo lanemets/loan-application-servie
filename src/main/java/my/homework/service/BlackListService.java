@@ -4,6 +4,6 @@ import my.homework.exception.BlackListedPersonIdException;
 
 public interface BlackListService {
 
-    void checkBlackListedPersonalId(long personId) throws BlackListedPersonIdException;
+    boolean isPersonalIdBlackListed(long personId) throws BlackListedPersonIdException;
 
 }

@@ -10,6 +10,4 @@ public interface LoanService {
     void apply(LoanApplicationRequest loanApplicationRequest, UUID requestUid);
 
     Collection<Loan> getAllLoansApproved();
-
-    LoanApplicationStatus getLoanApplicationStatus(Long personalId);
 }

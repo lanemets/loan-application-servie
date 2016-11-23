@@ -13,7 +13,7 @@ class BlackListedDaoImpl implements BlackListedDao {
     }
 
     @Override
-    public Boolean doesBlackListContainPersonalId(long personalId) {
+    public Boolean isPersonalIdBlackListed(long personalId) {
         return jdbcTemplate.queryForObject(
             SQL_CHECK_BLACKLISTED_PERSON_QUERY,
             new Object[]{personalId},
