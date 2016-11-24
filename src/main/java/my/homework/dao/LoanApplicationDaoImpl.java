@@ -1,22 +1,17 @@
 package my.homework.dao;
 
 import com.google.common.collect.Lists;
-import my.homework.LoanApplicationRequest;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import javax.sql.DataSource;
 import my.homework.service.Loan;
 import my.homework.service.LoanApplicationStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.sql.DataSource;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 class LoanApplicationDaoImpl implements LoanApplicationDao {
 
@@ -31,14 +26,21 @@ class LoanApplicationDaoImpl implements LoanApplicationDao {
     }
 
     @Override
-    @Transactional
-    public void addLoanApplication(LoanApplicationRequest loanApplicationRequest, UUID requestUid, LoanApplicationStatus status) {
+    public void addLoanApplication(
+        long personalId,
+        String name,
+        String surname,
+        String term,
+        BigDecimal amount,
+        LoanApplicationStatus status,
+        String requestUid
+    ) {
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
-            .addValue("personal_id", loanApplicationRequest.getPersonId())
-            .addValue("name", loanApplicationRequest.getName())
-            .addValue("surname", loanApplicationRequest.getSurname())
-            .addValue("term", loanApplicationRequest.getTerm())
-            .addValue("amount", loanApplicationRequest.getAmount())
+            .addValue("personal_id", personalId)
+            .addValue("name", name)
+            .addValue("surname", surname)
+            .addValue("term", term)
+            .addValue("amount", amount)
             .addValue("status", status.getValue())
             .addValue("timestamp", LocalDateTime.now())
             .addValue("request_uid", requestUid);
@@ -47,8 +49,11 @@ class LoanApplicationDaoImpl implements LoanApplicationDao {
     }
 
     @Override
-    public Collection<Loan> getAllLoansApproved() {
-        List<Map<String, Object>> resultMaps = jdbcTemplate.queryForList(SQL_GET_ALL_LOANS_APPROVED, LoanApplicationStatus.OK.getValue());
+    public List<Loan> getAllLoansApproved() {
+        List<Map<String, Object>> resultMaps = jdbcTemplate.queryForList(
+            SQL_GET_ALL_LOANS_APPROVED,
+            LoanApplicationStatus.OK.getValue()
+        );
         List<Loan> loansApproved = Lists.newArrayList();
         resultMaps.forEach(
             map -> loansApproved.add(
@@ -57,7 +62,7 @@ class LoanApplicationDaoImpl implements LoanApplicationDao {
                     new BigDecimal(map.get("amount").toString()),
                     map.get("name").toString(),
                     map.get("surname").toString(),
-                    UUID.fromString(map.get("request_uid").toString())
+                    map.get("request_uid").toString()
                 )
             )
         );

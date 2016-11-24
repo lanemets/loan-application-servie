@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 
 @Configuration
-public class LoanDaoConfiguration {
+public class LoanApplicationDaoConfiguration {
 
     @Bean
     public LoanApplicationDao loanDao(DataSource dataSource) {

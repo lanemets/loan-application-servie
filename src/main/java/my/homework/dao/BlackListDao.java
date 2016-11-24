@@ -1,6 +1,6 @@
 package my.homework.dao;
 
-public interface BlackListedDao {
+public interface BlackListDao {
 
     Boolean isPersonalIdBlackListed(long personalId);
 

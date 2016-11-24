@@ -12,7 +12,7 @@ public class LoanApplicationRequest {
     @NotNull
     private BigDecimal amount;
     @NotNull
-    private Long personId;
+    private Long personalId;
 
     private String term;
     private String name;
@@ -50,12 +50,12 @@ public class LoanApplicationRequest {
         this.surname = surname;
     }
 
-    public Long getPersonId() {
-        return personId;
+    public Long getPersonalId() {
+        return personalId;
     }
 
-    public void setPersonId(Long personId) {
-        this.personId = personId;
+    public void setPersonalId(Long personalId) {
+        this.personalId = personalId;
     }
 
     @Override
@@ -63,20 +63,30 @@ public class LoanApplicationRequest {
         if (this == o) {
             return true;
         }
-
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
         LoanApplicationRequest that = (LoanApplicationRequest) o;
-        return Objects.equals(amount, that.amount) &&
-            Objects.equals(term, that.term) &&
-            Objects.equals(name, that.name) &&
-            Objects.equals(surname, that.surname) &&
-            Objects.equals(personId, that.personId);
+        return com.google.common.base.Objects.equal(amount, that.amount) &&
+            com.google.common.base.Objects.equal(personalId, that.personalId) &&
+            com.google.common.base.Objects.equal(term, that.term) &&
+            com.google.common.base.Objects.equal(name, that.name) &&
+            com.google.common.base.Objects.equal(surname, that.surname);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(amount, term, name, surname, personId);
+        return com.google.common.base.Objects.hashCode(amount, personalId, term, name, surname);
+    }
+
+    @Override
+    public String toString() {
+        return "LoanApplicationRequest{" +
+            "amount=" + amount +
+            ", personalId=" + personalId +
+            ", term='" + term + '\'' +
+            ", name='" + name + '\'' +
+            ", surname='" + surname + '\'' +
+            '}';
     }
 }

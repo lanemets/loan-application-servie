@@ -1,13 +1,14 @@
 package my.homework.service;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 import my.homework.LoanApplicationRequest;
 import my.homework.dao.LoanApplicationDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
-
-import java.util.Collection;
-import java.util.UUID;
+import org.springframework.transaction.annotation.Transactional;
 
 class LoanServiceImpl implements LoanService {
 
@@ -23,28 +24,38 @@ class LoanServiceImpl implements LoanService {
 
     @Override
     @Async
-    public void apply(LoanApplicationRequest loanApplicationRequest, UUID requestUid) {
+    @Transactional
+    public void apply(LoanApplicationRequest loanApplicationRequest, String requestUid) {
         logger.debug(
             "starting loan application request processing; personalId: {}, requestUid: {}",
-            loanApplicationRequest.getPersonId(),
+            loanApplicationRequest.getPersonalId(),
             requestUid
         );
 
-        boolean isPersonalIdBlackListed = blackListService.isPersonalIdBlackListed(loanApplicationRequest.getPersonId());
+        boolean isPersonalIdBlackListed = blackListService.isPersonalIdBlackListed(loanApplicationRequest.getPersonalId());
         LoanApplicationStatus status = isPersonalIdBlackListed ? LoanApplicationStatus.PERSON_BLACKLISTED : LoanApplicationStatus.OK;
 
-        loanApplicationDao.addLoanApplication(loanApplicationRequest, requestUid, status);
+        loanApplicationDao.addLoanApplication(
+            loanApplicationRequest.getPersonalId(),
+            loanApplicationRequest.getName(),
+            loanApplicationRequest.getSurname(),
+            loanApplicationRequest.getTerm(),
+            loanApplicationRequest.getAmount(),
+            status,
+            requestUid
+        );
 
         logger.debug(
             "loan application request processing has been successfully finished; personalId: {}, requestUid: {}, status: {}",
-            loanApplicationRequest.getPersonId(),
+            loanApplicationRequest.getPersonalId(),
             requestUid,
             status
         );
     }
 
     @Override
-    public Collection<Loan> getAllLoansApproved() {
+    @Transactional
+    public List<Loan> getAllLoansApproved() {
         return loanApplicationDao.getAllLoansApproved();
     }
 }

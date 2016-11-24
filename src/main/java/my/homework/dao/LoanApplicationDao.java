@@ -1,5 +1,6 @@
 package my.homework.dao;
 
+import java.util.List;
 import my.homework.LoanApplicationRequest;
 import my.homework.service.Loan;
 import my.homework.service.LoanApplicationStatus;
@@ -11,7 +12,15 @@ import java.util.UUID;
 
 public interface LoanApplicationDao {
 
-    void addLoanApplication(LoanApplicationRequest loanApplicationRequest, UUID requestUid, LoanApplicationStatus status);
+    void addLoanApplication(
+        long personalId,
+        String name,
+        String surname,
+        String term,
+        BigDecimal amount,
+        LoanApplicationStatus status,
+        String requestUid
+    );
 
-    Collection<Loan> getAllLoansApproved();
+    List<Loan> getAllLoansApproved();
 }

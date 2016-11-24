@@ -9,8 +9,8 @@ import javax.sql.DataSource;
 public class BlackListDaoConfiguration {
 
     @Bean
-    public BlackListedDao blackListedDao(DataSource dataSource) {
-        return new BlackListedDaoImpl(dataSource);
+    public BlackListDao blackListedDao(DataSource dataSource) {
+        return new BlackListDaoImpl(dataSource);
     }
 
 }

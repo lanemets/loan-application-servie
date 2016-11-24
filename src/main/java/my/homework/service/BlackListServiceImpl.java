@@ -1,18 +1,20 @@
 package my.homework.service;
 
-import my.homework.dao.BlackListedDao;
+import my.homework.dao.BlackListDao;
 import my.homework.exception.BlackListedPersonIdException;
+import org.springframework.transaction.annotation.Transactional;
 
 class BlackListServiceImpl implements BlackListService {
 
-    private final BlackListedDao blackListedDao;
+    private final BlackListDao blackListDao;
 
-    BlackListServiceImpl(BlackListedDao blackListedDao) {
-        this.blackListedDao = blackListedDao;
+    BlackListServiceImpl(BlackListDao blackListDao) {
+        this.blackListDao = blackListDao;
     }
 
     @Override
+    @Transactional
     public boolean isPersonalIdBlackListed(long personId) throws BlackListedPersonIdException {
-        return blackListedDao.isPersonalIdBlackListed(personId);
+        return blackListDao.isPersonalIdBlackListed(personId);
     }
 }

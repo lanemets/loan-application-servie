@@ -1,5 +1,8 @@
 package my.homework.controller;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 import my.homework.LoanApplicationRequest;
 import my.homework.constant.ErrorResult;
 import my.homework.constant.ErrorTypes;
@@ -15,19 +18,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
-import java.util.UUID;
-
 @RestController
 public class OnlineController {
 
     private static final Logger logger = LoggerFactory.getLogger(OnlineController.class);
 
     private final LoanService loanService;
+    private final UuidGenerator uuidGenerator;
 
     @Autowired
-    public OnlineController(LoanService loanService) {
+    public OnlineController(
+        LoanService loanService,
+        UuidGenerator loanApplicationUuidGenerator
+    ) {
         this.loanService = loanService;
+        this.uuidGenerator = loanApplicationUuidGenerator;
     }
 
     @RequestMapping(
@@ -38,19 +43,21 @@ public class OnlineController {
     )
     public LoanResult<?> apply(@RequestBody LoanApplicationRequest loanApplicationRequest) {
         try {
-            logger.debug("starting loan application request processing; personalId: {}", loanApplicationRequest.getPersonId());
-            UUID requestUid = UUID.randomUUID();
-            loanService.apply(loanApplicationRequest, requestUid);
+            logger.debug("starting loan application request processing; personalId: {}", loanApplicationRequest.getPersonalId());
+            String requestUuid = uuidGenerator.generate();
+            loanService.apply(loanApplicationRequest, requestUuid);
             logger.debug(
                 "loan application request processed successfully; personalId: {}, requestUid: {}",
-                loanApplicationRequest.getPersonId(),
-                requestUid
+                loanApplicationRequest.getPersonalId(),
+                requestUuid
             );
-            return new LoanResult<>(requestUid.toString(), null);
+            return new LoanResult<>(requestUuid, null);
         } catch (Exception exception) {
-            logger.error(String.format(
-                "unexpected error has occurred during application process; personalId: %f",
-                loanApplicationRequest.getPersonId()),
+            logger.error(
+                String.format(
+                    "unexpected error has occurred during application process; personalId: %f",
+                    loanApplicationRequest.getPersonalId()
+                ),
                 exception
             );
             ErrorResult errorResult = new ErrorResult();
@@ -68,7 +75,7 @@ public class OnlineController {
     public LoanResult<?> getAllLoansApproved() {
         try {
             logger.debug("starting all loans approved retrieving;");
-            Collection<Loan> allLoansApproved = loanService.getAllLoansApproved();
+            List<Loan> allLoansApproved = loanService.getAllLoansApproved();
             logger.debug("all loans approved retrieved successfully; loans retrieved count: {}", allLoansApproved.size());
             return new LoanResult<>(allLoansApproved, null);
         } catch (Exception exception) {

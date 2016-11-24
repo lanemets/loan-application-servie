@@ -1,16 +1,12 @@
 package my.homework.service;
 
 import my.homework.dao.LoanApplicationDao;
-import my.homework.dao.LoanDaoConfiguration;
+import my.homework.dao.LoanApplicationDaoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import({
-    LoanDaoConfiguration.class,
-    BlackListServiceConfiguration.class
-})
 public class LoanServiceConfiguration {
 
     @Bean

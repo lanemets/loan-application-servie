@@ -1,0 +1,19 @@
+{
+  "result": [
+    {
+      "term": "TEST_TERM",
+      "amount": 100,
+      "personalName": "TEST_NAME",
+      "personalSurname": "TEST_SURNAME",
+      "requestUid": "TEST_UUID"
+    },
+    {
+      "term": "TEST_TERM",
+      "amount": 100,
+      "personalName": "TEST_NAME",
+      "personalSurname": "TEST_SURNAME",
+      "requestUid": "ANOTHER_TEST_UUID"
+    }
+  ],
+  "errorResult": null
+}

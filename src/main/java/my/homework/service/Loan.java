@@ -11,14 +11,14 @@ public class Loan {
     private BigDecimal amount;
     private String personalName;
     private String personalSurname;
-    private UUID requestUid;
+    private String requestUid;
 
     public Loan(
         String term,
         BigDecimal amount,
         String personalName,
         String personalSurname,
-        UUID requestUid
+        String requestUid
     ) {
         this.term = term;
         this.amount = amount;
@@ -59,11 +59,11 @@ public class Loan {
         this.personalSurname = personalSurname;
     }
 
-    public UUID getRequestUid() {
+    public String getRequestUid() {
         return requestUid;
     }
 
-    public void setRequestUid(UUID requestUid) {
+    public void setRequestUid(String requestUid) {
         this.requestUid = requestUid;
     }
 
@@ -86,5 +86,16 @@ public class Loan {
     @Override
     public int hashCode() {
         return Objects.hashCode(term, amount, personalName, personalSurname, requestUid);
+    }
+
+    @Override
+    public String toString() {
+        return "Loan{" +
+            "term='" + term + '\'' +
+            ", amount=" + amount +
+            ", personalName='" + personalName + '\'' +
+            ", personalSurname='" + personalSurname + '\'' +
+            ", requestUid=" + requestUid +
+            '}';
     }
 }

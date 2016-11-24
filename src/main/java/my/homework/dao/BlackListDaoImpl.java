@@ -4,11 +4,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 
-class BlackListedDaoImpl implements BlackListedDao {
+class BlackListDaoImpl implements BlackListDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    BlackListedDaoImpl(DataSource dataSource) {
+    BlackListDaoImpl(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
