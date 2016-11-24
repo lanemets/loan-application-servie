@@ -1,4 +1,4 @@
-package my.homework.controller;
+package my.homework.common;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

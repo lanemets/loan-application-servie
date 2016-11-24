@@ -1,14 +1,14 @@
 package my.homework.service;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
 import my.homework.LoanApplicationRequest;
 import my.homework.dao.LoanApplicationDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 class LoanServiceImpl implements LoanService {
 
@@ -55,7 +55,7 @@ class LoanServiceImpl implements LoanService {
 
     @Override
     @Transactional
-    public List<Loan> getAllLoansApproved() {
-        return loanApplicationDao.getAllLoansApproved();
+    public List<Loan> getAllLoansApproved(@Nullable Long personalId) {
+        return loanApplicationDao.getAllLoansApproved(personalId);
     }
 }

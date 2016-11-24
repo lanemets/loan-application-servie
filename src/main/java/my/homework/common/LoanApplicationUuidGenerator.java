@@ -1,4 +1,4 @@
-package my.homework.controller;
+package my.homework.common;
 
 import java.util.concurrent.ThreadLocalRandom;
 import org.apache.tomcat.util.buf.HexUtils;

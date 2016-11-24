@@ -1,14 +1,11 @@
 package my.homework.dao;
 
-import java.util.List;
-import my.homework.LoanApplicationRequest;
 import my.homework.service.Loan;
 import my.homework.service.LoanApplicationStatus;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nullable;
 import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.UUID;
+import java.util.List;
 
 public interface LoanApplicationDao {
 
@@ -22,5 +19,5 @@ public interface LoanApplicationDao {
         String requestUid
     );
 
-    List<Loan> getAllLoansApproved();
+    List<Loan> getAllLoansApproved(@Nullable Long personalIds);
 }

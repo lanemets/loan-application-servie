@@ -1,14 +1,13 @@
 package my.homework.service;
 
-import java.util.List;
 import my.homework.LoanApplicationRequest;
 
-import java.util.Collection;
-import java.util.UUID;
+import javax.annotation.Nullable;
+import java.util.List;
 
 public interface LoanService {
 
     void apply(LoanApplicationRequest loanApplicationRequest, String requestUid);
 
-    List<Loan> getAllLoansApproved();
+    List<Loan> getAllLoansApproved(@Nullable Long personalId);
 }

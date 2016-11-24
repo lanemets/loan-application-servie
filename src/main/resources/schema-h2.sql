@@ -5,7 +5,7 @@ create table if not exists loan_applications_schema.status (
 
 create table if not exists loan_applications_schema.loan_application (
   id bigint primary key auto_increment not null,
-  request_uid UUID,
+  request_uid varchar(32),
   personal_id bigint,
   amount decimal,
   name varchar(300),

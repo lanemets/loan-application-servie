@@ -5,6 +5,9 @@ import com.google.common.io.Resources;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
+
+import my.homework.common.UuidGenerator;
 import my.homework.dao.BlackListDao;
 import my.homework.dao.LoanApplicationDao;
 import my.homework.service.BlackListServiceConfiguration;
@@ -26,8 +29,7 @@ import org.testng.annotations.Test;
 
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.io.Resources.getResource;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
@@ -107,9 +109,10 @@ public class OnlineControllerTest extends AbstractTestNGSpringContextTests {
         };
     }
 
+    @SuppressWarnings("unchecked")
     @Test(dataProvider = "getLoansApprovedDataProvider")
     public void testGetLoansApproved(List<Loan> loansApproved, String response) throws Exception {
-        when(loanApplicationDao.getAllLoansApproved()).thenReturn(loansApproved);
+        when(loanApplicationDao.getAllLoansApproved(anyLong())).thenReturn(loansApproved);
 
         mockMvc.perform(get(URL_GET_APPROVED)
             .accept(MediaType.APPLICATION_JSON_VALUE))
