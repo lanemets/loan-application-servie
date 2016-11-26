@@ -11,6 +11,7 @@ create table if not exists loan_applications_schema.loan_application (
   name varchar(300),
   surname varchar(300),
   term varchar(500),
+  country_code varchar(6),
   status tinyint,
   timestamp timestamp,
   foreign key (status) references loan_applications_schema.status(id)

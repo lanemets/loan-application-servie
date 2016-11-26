@@ -1,6 +1,7 @@
 package my.homework;
 
 import com.google.common.util.concurrent.RateLimiter;
+import my.homework.country.CountryCodeResolver;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -11,13 +12,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private ThrottlingRequestFilter throttlingRequestFilter;
+    private CountryCodeResolver countryCodeResolver;
 
-    public SecurityConfiguration() {
-        this.throttlingRequestFilter = throttlingRequestFilter();
+    public SecurityConfiguration(CountryCodeResolver countryCodeResolver) {
+        this.throttlingRequestFilter = throttlingRequestFilter(countryCodeResolver);
     }
 
-    private ThrottlingRequestFilter throttlingRequestFilter() {
-        return new ThrottlingRequestFilter();
+    private ThrottlingRequestFilter throttlingRequestFilter(CountryCodeResolver countryCodeResolver) {
+        return new ThrottlingRequestFilter(countryCodeResolver);
     }
 
     @Override
@@ -27,7 +29,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http
             .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+            .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
 
         http.addFilterBefore(throttlingRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
