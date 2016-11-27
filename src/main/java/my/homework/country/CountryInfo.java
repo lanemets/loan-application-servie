@@ -21,6 +21,13 @@ public class CountryInfo {
     private String timezone;
     private String zip;
 
+    public CountryInfo() {
+    }
+
+    CountryInfo(String countryCode) {
+        this.countryCode = countryCode;
+    }
+
     public String getAs() {
         return as;
     }

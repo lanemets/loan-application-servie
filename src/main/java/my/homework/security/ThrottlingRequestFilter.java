@@ -19,14 +19,14 @@ import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
-public class ThrottlingRequestFilter extends GenericFilterBean {
+class ThrottlingRequestFilter extends GenericFilterBean {
 
     private static final Logger logger = LoggerFactory.getLogger(ThrottlingRequestFilter.class);
 
     private final CountryCodeResolver countryCodeResolver;
     private final ThrottlingRequestSettings throttlingRequestSettings;
 
-    public ThrottlingRequestFilter(
+    ThrottlingRequestFilter(
         CountryCodeResolver countryCodeResolver,
         ThrottlingRequestSettings throttlingRequestSettings
     ) {
@@ -41,7 +41,7 @@ public class ThrottlingRequestFilter extends GenericFilterBean {
         FilterChain filterChain
     ) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
-        if (httpRequest.getServletPath().equals("/apply")) {
+        if (httpRequest.getPathInfo().equals("/apply")) {
 
             logger.debug("starting throttling check");
 

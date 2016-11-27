@@ -12,16 +12,13 @@ class CountryCodeResolverImpl implements CountryCodeResolver {
 
     private static final Logger logger = LoggerFactory.getLogger(CountryCodeResolverImpl.class);
 
-    private final RestClientConfiguration restClientConfiguration;
     private final GeoIpClientSettings geoIpClientSettings;
     private final RestTemplate restTemplate;
 
-    public CountryCodeResolverImpl(
-        RestClientConfiguration restClientConfiguration,
+    CountryCodeResolverImpl(
         GeoIpClientSettings geoIpClientSettings,
         RestTemplate restTemplate
     ) {
-        this.restClientConfiguration = restClientConfiguration;
         this.geoIpClientSettings = geoIpClientSettings;
         this.restTemplate = restTemplate;
     }

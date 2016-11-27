@@ -11,11 +11,10 @@ public class CountryCodeResolverConfiguration {
 
     @Bean
     public CountryCodeResolver countryCodeResolver(
-        RestClientConfiguration restClientConfiguration,
         GeoIpClientSettings geoIpClientSettings,
         RestTemplate restTemplate
     ) {
-        return new CountryCodeResolverImpl(restClientConfiguration, geoIpClientSettings, restTemplate);
+        return new CountryCodeResolverImpl(geoIpClientSettings, restTemplate);
     }
 
 }
