@@ -58,6 +58,17 @@ public class LoanApplicationRequest {
         this.personalId = personalId;
     }
 
+    public LoanApplicationRequest() {
+    }
+
+    public LoanApplicationRequest(BigDecimal amount, Long personalId, String term, String name, String surname) {
+        this.amount = amount;
+        this.personalId = personalId;
+        this.term = term;
+        this.name = name;
+        this.surname = surname;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

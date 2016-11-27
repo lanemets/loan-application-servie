@@ -25,7 +25,7 @@ class LoanServiceImpl implements LoanService {
     @Override
     @Async
     @Transactional
-    public void apply(LoanApplicationRequest loanApplicationRequest, String requestUid) {
+    public void apply(LoanApplicationRequest loanApplicationRequest, String countryCode, String requestUid) {
         logger.debug(
             "starting loan application request processing; personalId: {}, requestUid: {}",
             loanApplicationRequest.getPersonalId(),
@@ -42,6 +42,7 @@ class LoanServiceImpl implements LoanService {
             loanApplicationRequest.getTerm(),
             loanApplicationRequest.getAmount(),
             status,
+            countryCode,
             requestUid
         );
 

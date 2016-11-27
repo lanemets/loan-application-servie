@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -38,11 +39,16 @@ class OnlineController {
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public LoanResult<?> apply(@RequestBody LoanApplicationRequest loanApplicationRequest) {
+    public LoanResult<?> apply(
+        HttpServletRequest httpServletRequest,
+        @RequestBody LoanApplicationRequest loanApplicationRequest
+    ) {
         try {
             logger.debug("starting loan application request processing; personalId: {}", loanApplicationRequest.getPersonalId());
+            String countryCode = String.valueOf(httpServletRequest.getAttribute("country_code"));
+
             String requestUuid = uuidGenerator.generate();
-            loanService.apply(loanApplicationRequest, requestUuid);
+            loanService.apply(loanApplicationRequest, countryCode, requestUuid);
             logger.debug(
                 "loan application request processed successfully; personalId: {}, requestUid: {}",
                 loanApplicationRequest.getPersonalId(),
@@ -80,11 +86,11 @@ class OnlineController {
     }
 
     @RequestMapping(
-        value = "/loans_approved/{personalId}",
+        value = "/loans_approved/{personal_id}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public LoanResult<?> getAllLoansApprovedByPersonalId(@PathVariable("personalId") String personalId) {
+    public LoanResult<?> getAllLoansApprovedByPersonalId(@PathVariable("personal_id") String personalId) {
         try {
             logger.debug("starting all person's loans approved retrieving; personalId: {}", personalId);
             List<Loan> allLoansApproved = loanService.getAllLoansApproved(Long.valueOf(personalId));

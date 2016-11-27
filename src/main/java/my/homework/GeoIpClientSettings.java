@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class GeoIpClientSettings {
 
     private String url;
-    private String defaultContryCode;
+    private String defaultCountryCode;
 
     public String getUrl() {
         return url;
@@ -19,11 +19,11 @@ public class GeoIpClientSettings {
         this.url = url;
     }
 
-    public String getDefaultContryCode() {
-        return defaultContryCode;
+    public String getDefaultCountryCode() {
+        return defaultCountryCode;
     }
 
-    public void setDefaultContryCode(String defaultContryCode) {
-        this.defaultContryCode = defaultContryCode;
+    public void setDefaultCountryCode(String defaultCountryCode) {
+        this.defaultCountryCode = defaultCountryCode;
     }
 }

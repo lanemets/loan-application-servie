@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface LoanService {
 
-    void apply(LoanApplicationRequest loanApplicationRequest, String requestUid);
+    void apply(LoanApplicationRequest loanApplicationRequest, String countryCode, String requestUid);
 
     List<Loan> getAllLoansApproved(@Nullable Long personalId);
 }

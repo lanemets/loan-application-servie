@@ -34,6 +34,7 @@ class LoanApplicationDaoImpl implements LoanApplicationDao {
         String term,
         BigDecimal amount,
         LoanApplicationStatus status,
+        String countryCode,
         String requestUid
     ) {
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource()
@@ -44,6 +45,7 @@ class LoanApplicationDaoImpl implements LoanApplicationDao {
             .addValue("amount", amount)
             .addValue("status", status.getValue())
             .addValue("timestamp", LocalDateTime.now())
+            .addValue("country_code", countryCode)
             .addValue("request_uid", requestUid);
 
         simpleJdbcInsert.execute(sqlParameterSource);
@@ -70,6 +72,7 @@ class LoanApplicationDaoImpl implements LoanApplicationDao {
                     resultSet.getBigDecimal("amount"),
                     resultSet.getString("name"),
                     resultSet.getString("surname"),
+                    resultSet.getLong("personal_id"),
                     resultSet.getString("request_uid")
                 )
             )

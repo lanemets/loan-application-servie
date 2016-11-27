@@ -11,19 +11,15 @@ public class Loan {
     private BigDecimal amount;
     private String personalName;
     private String personalSurname;
+    private Long personalId;
     private String requestUid;
 
-    public Loan(
-        String term,
-        BigDecimal amount,
-        String personalName,
-        String personalSurname,
-        String requestUid
-    ) {
+    public Loan(String term, BigDecimal amount, String personalName, String personalSurname, Long personalId, String requestUid) {
         this.term = term;
         this.amount = amount;
         this.personalName = personalName;
         this.personalSurname = personalSurname;
+        this.personalId = personalId;
         this.requestUid = requestUid;
     }
 
@@ -63,6 +59,14 @@ public class Loan {
         return requestUid;
     }
 
+    public Long getPersonalId() {
+        return personalId;
+    }
+
+    public void setPersonalId(Long personalId) {
+        this.personalId = personalId;
+    }
+
     public void setRequestUid(String requestUid) {
         this.requestUid = requestUid;
     }
@@ -80,22 +84,12 @@ public class Loan {
             Objects.equal(amount, loan.amount) &&
             Objects.equal(personalName, loan.personalName) &&
             Objects.equal(personalSurname, loan.personalSurname) &&
+            Objects.equal(personalId, loan.personalId) &&
             Objects.equal(requestUid, loan.requestUid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(term, amount, personalName, personalSurname, requestUid);
-    }
-
-    @Override
-    public String toString() {
-        return "Loan{" +
-            "term='" + term + '\'' +
-            ", amount=" + amount +
-            ", personalName='" + personalName + '\'' +
-            ", personalSurname='" + personalSurname + '\'' +
-            ", requestUid=" + requestUid +
-            '}';
+        return Objects.hashCode(term, amount, personalName, personalSurname, personalId, requestUid);
     }
 }

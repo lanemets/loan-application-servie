@@ -16,8 +16,9 @@ public interface LoanApplicationDao {
         String term,
         BigDecimal amount,
         LoanApplicationStatus status,
+        String countryCode,
         String requestUid
     );
 
-    List<Loan> getAllLoansApproved(@Nullable Long personalIds);
+    List<Loan> getAllLoansApproved(@Nullable Long personalId);
 }
