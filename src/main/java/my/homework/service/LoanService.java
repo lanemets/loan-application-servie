@@ -10,4 +10,6 @@ public interface LoanService {
     void apply(LoanApplicationRequest loanApplicationRequest, String countryCode, String requestUid);
 
     List<Loan> getAllLoansApproved(@Nullable Long personalId);
+
+    Loan getLoanApplicationByUid(String applicationUid);
 }

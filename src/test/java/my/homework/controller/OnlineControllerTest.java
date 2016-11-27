@@ -223,6 +223,35 @@ public class OnlineControllerTest extends AbstractTestNGSpringContextTests {
         };
     }
 
+    @SuppressWarnings("unchecked")
+    @Test(dataProvider = "getLoanByUidDatProvider")
+    public void testGetLoanByUid(Loan loansFound, String applicationUid, String response) throws Exception {
+        when(loanApplicationDao.getLoanApplicationByUid(eq(applicationUid))).thenReturn(loansFound);
+
+        mockMvc.perform(
+            createRequestBuilder(URL_GET_BY_UID + "/{application_uid}", applicationUid))
+            .andExpect(status().isOk())
+            .andExpect(content().json(response, true));
+
+        verify(loanApplicationDao).getLoanApplicationByUid(eq(applicationUid));
+    }
+
+    @DataProvider
+    public static Object[][] getLoanByUidDatProvider() throws IOException {
+        return new Object[][]{
+            {
+                new Loan("TEST_TERM", BigDecimal.valueOf(100L), "TEST_NAME", "TEST_SURNAME", 123L, "TEST_UUID"),
+                "TEST_UUID",
+                Resources.toString(getResource("response-get-loan-by-uid.json"), UTF_8)
+            },
+            {
+                null,
+                "TEST_UUID",
+                "{\"result\":null,\"errorResult\":null}"
+            }
+        };
+    }
+
     private static RequestBuilder createRequestBuilder(String url, Object... params) {
         return get(url, params)
             .header(AUTHORIZATION, BASIC_AUTH_HEADER_VALUE)
@@ -268,6 +297,7 @@ public class OnlineControllerTest extends AbstractTestNGSpringContextTests {
 
     private static final String URL_APPLY = "/apply";
     private static final String URL_GET_APPROVED = "/loans_approved";
+    private static final String URL_GET_BY_UID = "/loans_applications";
 
     private static final String TEST_UUID = "TEST_UUID";
     private static final String BASIC_AUTH_HEADER_VALUE = "Basic dXNlcjpRd2VydHkxMg==";

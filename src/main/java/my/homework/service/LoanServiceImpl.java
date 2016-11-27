@@ -59,4 +59,9 @@ class LoanServiceImpl implements LoanService {
     public List<Loan> getAllLoansApproved(@Nullable Long personalId) {
         return loanApplicationDao.getAllLoansApproved(personalId);
     }
+
+    @Override
+    public Loan getLoanApplicationByUid(String applicationUid) {
+        return loanApplicationDao.getLoanApplicationByUid(applicationUid);
+    }
 }

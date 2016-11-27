@@ -21,4 +21,6 @@ public interface LoanApplicationDao {
     );
 
     List<Loan> getAllLoansApproved(@Nullable Long personalId);
+
+    Loan getLoanApplicationByUid(String applicationUid);
 }

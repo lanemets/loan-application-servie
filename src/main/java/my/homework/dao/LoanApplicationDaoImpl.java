@@ -3,6 +3,7 @@ package my.homework.dao;
 import com.google.common.collect.Lists;
 import my.homework.service.Loan;
 import my.homework.service.LoanApplicationStatus;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -81,10 +82,36 @@ class LoanApplicationDaoImpl implements LoanApplicationDao {
         return loansApproved;
     }
 
+    @Override
+    public Loan getLoanApplicationByUid(String applicationUid) {
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
+            .addValue("p_request_uid", applicationUid);
+        Loan loan;
+        try {
+            loan = namedParameterJdbcTemplate.queryForObject(
+                SQL_GET_LOAN_BY_UID,
+                mapSqlParameterSource,
+                (resultSet, rowNum) -> new Loan(
+                    resultSet.getString("term"),
+                    resultSet.getBigDecimal("amount"),
+                    resultSet.getString("name"),
+                    resultSet.getString("surname"),
+                    resultSet.getLong("personal_id"),
+                    resultSet.getString("request_uid")
+                )
+            );
+        } catch (EmptyResultDataAccessException exception) {
+            return null;
+        }
+        return loan;
+    }
+
     private static final String SQL_GET_ALL_LOANS_APPROVED =
         "select * from loan_applications_schema.loan_application la where la.status = :p_status";
     private static final String SQL_GET_ALL_LOANS_APPROVED_BY_USERS =
         "select * from loan_applications_schema.loan_application la where la.status = :p_status and la.personal_id = :p_personal_id";
+    private static final String SQL_GET_LOAN_BY_UID =
+        "select * from loan_applications_schema.loan_application la where la.request_uid = :p_request_uid";
 
     private static final String SCHEMA_NAME = "loan_applications_schema";
     private static final String TABLE_NAME = "loan_application";

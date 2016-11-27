@@ -94,10 +94,27 @@ class OnlineController {
         try {
             logger.debug("starting all person's loans approved retrieving; personalId: {}", personalId);
             List<Loan> allLoansApproved = loanService.getAllLoansApproved(Long.valueOf(personalId));
-            logger.debug("person's loans approved retrieved successfully; loans retrieved count: {}", allLoansApproved.size());
+            logger.debug("person's loans approved has been retrieved successfully; loans retrieved count: {}", allLoansApproved.size());
             return new LoanResult<>(allLoansApproved, null);
         } catch (Exception exception) {
             logger.error("unexpected error has occurred during all approved loans retrieval;", exception);
+            return new LoanResult<String>(null, createUnknownErrorResult(exception));
+        }
+    }
+
+    @RequestMapping(
+        value = "/loans_applications/{application_uid}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public LoanResult<?> getLoanApplicationByUid(@PathVariable("application_uid") String applicationUid) {
+        try {
+            logger.debug("starting retrieving loan application by uid; uid: {}", applicationUid);
+            Loan loanApplicationByUid = loanService.getLoanApplicationByUid(applicationUid);
+            logger.debug("loan application has been retrieved successfully; loanApplication: {}", loanApplicationByUid);
+            return new LoanResult<>(loanApplicationByUid, null);
+        } catch (Exception exception) {
+            logger.error("unexpected error has occurred during loan application retrieval;", exception);
             return new LoanResult<String>(null, createUnknownErrorResult(exception));
         }
     }

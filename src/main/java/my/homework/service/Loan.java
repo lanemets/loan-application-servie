@@ -23,6 +23,9 @@ public class Loan {
         this.requestUid = requestUid;
     }
 
+    public Loan() {
+    }
+
     public String getTerm() {
         return term;
     }
