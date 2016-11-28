@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import my.homework.country.CountryCodeResolver;
 import my.homework.settings.ThrottlingRequestSettings;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -28,7 +27,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ThrottlingRequestFilterTest {
 
-    @InjectMocks
     private ThrottlingRequestFilter throttlingRequestFilter;
     @Mock
     private CountryCodeResolver countryCodeResolver;
@@ -39,6 +37,8 @@ public class ThrottlingRequestFilterTest {
     public void setUp() {
         initMocks(this);
         initThrottlingRequestSettings();
+
+        throttlingRequestFilter = new ThrottlingRequestFilter(countryCodeResolver, throttlingRequestSettings);
     }
 
     @Test(dataProvider = "filterDataProvider")
