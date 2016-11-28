@@ -2,7 +2,6 @@ package my.homework.dao;
 
 import com.google.common.collect.Lists;
 import my.homework.service.LoanApplication;
-import my.homework.service.LoanApplicationStatus;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -34,7 +33,6 @@ class LoanApplicationDaoImpl implements LoanApplicationDao {
         String surname,
         String term,
         BigDecimal amount,
-        LoanApplicationStatus status,
         String countryCode,
         String requestUid
     ) {
@@ -44,7 +42,6 @@ class LoanApplicationDaoImpl implements LoanApplicationDao {
             .addValue("surname", surname)
             .addValue("term", term)
             .addValue("amount", amount)
-            .addValue("status", status.getValue())
             .addValue("timestamp", LocalDateTime.now())
             .addValue("country_code", countryCode)
             .addValue("request_uid", requestUid);
@@ -55,8 +52,7 @@ class LoanApplicationDaoImpl implements LoanApplicationDao {
     @Override
     public List<LoanApplication> getAllLoansApproved(@Nullable Long personalId) {
         List<LoanApplication> loansApproved = Lists.newArrayList();
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
-            .addValue("p_status", LoanApplicationStatus.OK.getValue());
+        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 
         String query = SQL_GET_ALL_LOANS_APPROVED;
         if (null != personalId) {
@@ -107,9 +103,9 @@ class LoanApplicationDaoImpl implements LoanApplicationDao {
     }
 
     private static final String SQL_GET_ALL_LOANS_APPROVED =
-        "select * from loan_applications_schema.loan_application la where la.status = :p_status";
+        "select * from loan_applications_schema.loan_application";
     private static final String SQL_GET_ALL_LOANS_APPROVED_BY_USERS =
-        "select * from loan_applications_schema.loan_application la where la.status = :p_status and la.personal_id = :p_personal_id";
+        "select * from loan_applications_schema.loan_application la where la.personal_id = :p_personal_id";
     private static final String SQL_GET_LOAN_BY_UID =
         "select * from loan_applications_schema.loan_application la where la.request_uid = :p_request_uid";
 

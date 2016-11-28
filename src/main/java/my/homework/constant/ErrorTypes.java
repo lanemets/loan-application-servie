@@ -2,7 +2,8 @@ package my.homework.constant;
 
 public enum ErrorTypes implements ErrorType {
 
-    UNKNOWN(-3000);
+    UNKNOWN(-3000),
+    BLACKLISTED(-3001);
 
     private int code;
 

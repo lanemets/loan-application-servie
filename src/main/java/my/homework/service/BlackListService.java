@@ -2,8 +2,8 @@ package my.homework.service;
 
 import my.homework.exception.BlackListedPersonIdException;
 
-interface BlackListService {
+public interface BlackListService {
 
-    boolean isPersonalIdBlackListed(long personId) throws BlackListedPersonIdException;
+    void checkBlackListed(long personId) throws BlackListedPersonIdException;
 
 }

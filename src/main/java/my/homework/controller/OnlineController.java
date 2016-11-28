@@ -3,10 +3,13 @@ package my.homework.controller;
 import my.homework.LoanApplicationRequest;
 import my.homework.common.UuidGenerator;
 import my.homework.constant.ErrorResult;
+import my.homework.constant.ErrorType;
 import my.homework.constant.ErrorTypes;
 import my.homework.constant.LoanResult;
+import my.homework.exception.BlackListedPersonIdException;
+import my.homework.service.BlackListService;
 import my.homework.service.LoanApplication;
-import my.homework.service.LoanService;
+import my.homework.service.LoanService;;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +25,17 @@ class OnlineController {
     private static final Logger logger = LoggerFactory.getLogger(OnlineController.class);
 
     private final LoanService loanService;
+    private final BlackListService blackListService;
     private final UuidGenerator uuidGenerator;
 
     @Autowired
     public OnlineController(
         LoanService loanService,
+        BlackListService blackListService,
         UuidGenerator loanApplicationUuidGenerator
     ) {
         this.loanService = loanService;
+        this.blackListService = blackListService;
         this.uuidGenerator = loanApplicationUuidGenerator;
     }
 
@@ -45,6 +51,8 @@ class OnlineController {
     ) {
         try {
             logger.debug("starting loan application request processing; personalId: {}", loanApplicationRequest.getPersonalId());
+
+            blackListService.checkBlackListed(loanApplicationRequest.getPersonalId());
             String countryCode = String.valueOf(httpServletRequest.getAttribute("country_code"));
 
             String requestUuid = uuidGenerator.generate();
@@ -55,16 +63,25 @@ class OnlineController {
                 requestUuid
             );
             return new LoanResult<>(requestUuid, null);
+        } catch (BlackListedPersonIdException exception) {
+            logger.error(
+                String.format(
+                    "person with given personal id is blacklisted; personalId: %s",
+                    loanApplicationRequest.getPersonalId()
+                )
+            );
+
+            return new LoanResult<>(null, createErrorResult(exception, ErrorTypes.BLACKLISTED));
         } catch (Exception exception) {
             logger.error(
                 String.format(
-                    "unexpected error has occurred during application process; personalId: %f",
+                    "unexpected error has occurred during application process; personalId: %s",
                     loanApplicationRequest.getPersonalId()
                 ),
                 exception
             );
 
-            return new LoanResult<String>(null, createUnknownErrorResult(exception));
+            return new LoanResult<String>(null, createErrorResult(exception, ErrorTypes.UNKNOWN));
         }
     }
 
@@ -81,7 +98,7 @@ class OnlineController {
             return new LoanResult<>(allLoansApproved, null);
         } catch (Exception exception) {
             logger.error("unexpected error has occurred during all approved loans retrieval;", exception);
-            return new LoanResult<String>(null, createUnknownErrorResult(exception));
+            return new LoanResult<String>(null, createErrorResult(exception, ErrorTypes.UNKNOWN));
         }
     }
 
@@ -98,7 +115,7 @@ class OnlineController {
             return new LoanResult<>(allLoansApproved, null);
         } catch (Exception exception) {
             logger.error("unexpected error has occurred during all approved loans retrieval;", exception);
-            return new LoanResult<String>(null, createUnknownErrorResult(exception));
+            return new LoanResult<String>(null, createErrorResult(exception, ErrorTypes.UNKNOWN));
         }
     }
 
@@ -115,15 +132,11 @@ class OnlineController {
             return new LoanResult<>(loanApplicationByUid, null);
         } catch (Exception exception) {
             logger.error("unexpected error has occurred during loan application retrieval;", exception);
-            return new LoanResult<String>(null, createUnknownErrorResult(exception));
+            return new LoanResult<String>(null, createErrorResult(exception, ErrorTypes.UNKNOWN));
         }
     }
 
-    private static ErrorResult createUnknownErrorResult(Exception exception) {
-        ErrorResult errorResult = new ErrorResult();
-        errorResult.setCode(ErrorTypes.UNKNOWN);
-        errorResult.setMessage(exception.getMessage());
-
-        return errorResult;
+    private static ErrorResult createErrorResult(Exception exception, ErrorType errorType) {
+        return new ErrorResult(errorType.getCode(), exception.getMessage());
     }
 }

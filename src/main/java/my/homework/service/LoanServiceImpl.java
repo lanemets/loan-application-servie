@@ -15,10 +15,8 @@ class LoanServiceImpl implements LoanService {
     private static final Logger logger = LoggerFactory.getLogger(LoanServiceImpl.class);
 
     private final LoanApplicationDao loanApplicationDao;
-    private final BlackListService blackListService;
 
-    LoanServiceImpl(LoanApplicationDao loanApplicationDao, BlackListService blackListService) {
-        this.blackListService = blackListService;
+    LoanServiceImpl(LoanApplicationDao loanApplicationDao) {
         this.loanApplicationDao = loanApplicationDao;
     }
 
@@ -32,25 +30,20 @@ class LoanServiceImpl implements LoanService {
             requestUid
         );
 
-        boolean isPersonalIdBlackListed = blackListService.isPersonalIdBlackListed(loanApplicationRequest.getPersonalId());
-        LoanApplicationStatus status = isPersonalIdBlackListed ? LoanApplicationStatus.PERSON_BLACKLISTED : LoanApplicationStatus.OK;
-
         loanApplicationDao.addLoanApplication(
             loanApplicationRequest.getPersonalId(),
             loanApplicationRequest.getName(),
             loanApplicationRequest.getSurname(),
             loanApplicationRequest.getTerm(),
             loanApplicationRequest.getAmount(),
-            status,
             countryCode,
             requestUid
         );
 
         logger.debug(
-            "loan application request processing has been successfully finished; personalId: {}, requestUid: {}, status: {}",
+            "loan application request processing has been successfully finished; personalId: {}, requestUid: {}",
             loanApplicationRequest.getPersonalId(),
-            requestUid,
-            status
+            requestUid
         );
     }
 

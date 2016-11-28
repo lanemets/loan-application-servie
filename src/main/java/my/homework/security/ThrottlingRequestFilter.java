@@ -42,45 +42,41 @@ class ThrottlingRequestFilter extends GenericFilterBean {
         FilterChain filterChain
     ) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
-        if (httpRequest.getServletPath().equals("/apply") || httpRequest.getPathInfo().equals("/apply")) {
 
-            logger.debug("starting throttling check");
+        logger.debug("starting throttling check");
 
-            String ipAddress = httpRequest.getHeader(PROXY_HEADER);
-            if (isNullOrEmpty(ipAddress)) {
-                ipAddress = httpRequest.getRemoteAddr();
-            }
+        String ipAddress = httpRequest.getHeader(PROXY_HEADER);
+        if (isNullOrEmpty(ipAddress)) {
+            ipAddress = httpRequest.getRemoteAddr();
+        }
 
-            logger.debug("received request; ipAddress: {}", ipAddress);
+        logger.debug("received request; ipAddress: {}", ipAddress);
 
-            String countryCode = countryCodeResolver.resolve(ipAddress);
+        String countryCode = countryCodeResolver.resolve(ipAddress);
 
-            logger.debug("resolved country; countryCode: {}", countryCode);
+        logger.debug("resolved country; countryCode: {}", countryCode);
 
-            HttpSession session = httpRequest.getSession(true);
-            Bucket bucket = (Bucket) session.getAttribute(requestThrottlingAttribute(countryCode));
-            if (bucket == null) {
-                bucket = Buckets.withNanoTimePrecision()
-                    .withLimitedBandwidth(
-                        throttlingRequestSettings.getMaxCapacity(),
-                        TimeUnit.valueOf(throttlingRequestSettings.getTimeUnit()),
-                        throttlingRequestSettings.getPeriod()
-                    )
-                    .build();
-                session.setAttribute(requestThrottlingAttribute(countryCode), bucket);
-            }
+        HttpSession session = httpRequest.getSession(true);
+        Bucket bucket = (Bucket) session.getAttribute(requestThrottlingAttribute(countryCode));
+        if (bucket == null) {
+            bucket = Buckets.withNanoTimePrecision()
+                .withLimitedBandwidth(
+                    throttlingRequestSettings.getMaxCapacity(),
+                    TimeUnit.valueOf(throttlingRequestSettings.getTimeUnit()),
+                    throttlingRequestSettings.getPeriod()
+                )
+                .build();
+            session.setAttribute(requestThrottlingAttribute(countryCode), bucket);
+        }
 
-            if (bucket.tryConsumeSingleToken()) {
-                servletRequest.setAttribute("country_code", countryCode);
-                filterChain.doFilter(servletRequest, servletResponse);
-            } else {
-                HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
-                httpResponse.setContentType("text/plain");
-                httpResponse.setStatus(429);
-                httpResponse.getWriter().append("Too many requests from one country");
-            }
-        } else {
+        if (bucket.tryConsumeSingleToken()) {
+            servletRequest.setAttribute("country_code", countryCode);
             filterChain.doFilter(servletRequest, servletResponse);
+        } else {
+            HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
+            httpResponse.setContentType("text/plain");
+            httpResponse.setStatus(429);
+            httpResponse.getWriter().append("Too many requests from one country");
         }
     }
 

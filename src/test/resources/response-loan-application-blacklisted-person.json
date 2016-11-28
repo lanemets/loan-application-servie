@@ -1,0 +1,7 @@
+{
+  "result": null,
+  "errorResult": {
+    "code": -3001,
+    "message": "person is blacklisted"
+  }
+}

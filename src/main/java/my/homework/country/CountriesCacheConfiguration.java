@@ -11,6 +11,8 @@ public class CountriesCacheConfiguration {
 
     @Bean
     public Cache<String, CountryInfo> countryInfoCache(GeoIpClientSettings geoIpClientSettings) {
-        return CacheBuilder.<String, CountryInfo>newBuilder().maximumSize(geoIpClientSettings.getCacheMaximumSize()).build();
+        return CacheBuilder.<String, CountryInfo>newBuilder()
+            .maximumSize(geoIpClientSettings.getCacheMaximumSize())
+            .build();
     }
 }

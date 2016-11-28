@@ -1,8 +1,6 @@
 package my.homework.constant;
 
-public interface ErrorType {
+public interface ErrorType extends HasCode {
 
     String getKey();
-
-    int getCode();
 }

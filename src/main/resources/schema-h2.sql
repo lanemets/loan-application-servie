@@ -1,8 +1,3 @@
-create table if not exists loan_applications_schema.status (
-  id tinyint primary key not null,
-  description varchar(200)
-);
-
 create table if not exists loan_applications_schema.loan_application (
   id bigint primary key auto_increment not null,
   request_uid varchar(32),
@@ -12,9 +7,7 @@ create table if not exists loan_applications_schema.loan_application (
   surname varchar(300),
   term varchar(500),
   country_code varchar(6),
-  status tinyint,
-  timestamp timestamp,
-  foreign key (status) references loan_applications_schema.status(id)
+  timestamp timestamp
 );
 
 create table if not exists loan_applications_schema.blacklisted_persons (

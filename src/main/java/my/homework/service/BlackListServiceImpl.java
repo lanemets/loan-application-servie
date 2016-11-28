@@ -14,7 +14,9 @@ class BlackListServiceImpl implements BlackListService {
 
     @Override
     @Transactional
-    public boolean isPersonalIdBlackListed(long personId) throws BlackListedPersonIdException {
-        return blackListDao.isPersonalIdBlackListed(personId);
+    public void checkBlackListed(long personId) throws BlackListedPersonIdException {
+        if (blackListDao.isPersonalIdBlackListed(personId)) {
+            throw new BlackListedPersonIdException();
+        }
     }
 }

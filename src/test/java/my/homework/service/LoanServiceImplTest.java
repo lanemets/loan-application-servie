@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
 import java.math.BigDecimal;
 
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class LoanServiceImplTest {
@@ -20,8 +20,6 @@ public class LoanServiceImplTest {
     private LoanServiceImpl loanService;
     @Mock
     private LoanApplicationDao loanApplicationDao;
-    @Mock
-    private BlackListService blackListService;
 
     @BeforeTest
     public void setUp() {
@@ -32,23 +30,16 @@ public class LoanServiceImplTest {
     public void testApply(
         LoanApplicationRequest loanApplicationRequest,
         String countryCode,
-        String requestUid,
-        boolean blackListed,
-        LoanApplicationStatus status
+        String requestUid
     ) throws Exception {
-        doReturn(blackListed).when(blackListService)
-            .isPersonalIdBlackListed(eq(loanApplicationRequest.getPersonalId()));
-
         loanService.apply(loanApplicationRequest, countryCode, requestUid);
 
-        verify(blackListService, times(1)).isPersonalIdBlackListed(eq(loanApplicationRequest.getPersonalId()));
-        verify(loanApplicationDao, times(1)).addLoanApplication(
+        verify(loanApplicationDao).addLoanApplication(
             eq(loanApplicationRequest.getPersonalId()),
             eq(loanApplicationRequest.getName()),
             eq(loanApplicationRequest.getSurname()),
             eq(loanApplicationRequest.getTerm()),
             eq(loanApplicationRequest.getAmount()),
-            eq(status),
             eq(countryCode),
             eq(requestUid)
         );
@@ -60,16 +51,7 @@ public class LoanServiceImplTest {
             {
                 new LoanApplicationRequest(new BigDecimal(100L), 123L, "TERM", "NAME", "SURNAME"),
                 "US",
-                "TEST_UID",
-                false,
-                LoanApplicationStatus.OK
-            },
-            {
-                new LoanApplicationRequest(new BigDecimal(101L), 124L, "TERM", "NAME", "SURNAME"),
-                "US",
-                "TEST_UID",
-                true,
-                LoanApplicationStatus.PERSON_BLACKLISTED
+                "TEST_UID"
             }
         };
     }
@@ -78,7 +60,7 @@ public class LoanServiceImplTest {
     public void testGetAllLoansApproved(Long personalId) throws Exception {
         loanService.getAllLoansApproved(personalId);
 
-        verify(loanApplicationDao, times(1)).getAllLoansApproved(eq(personalId));
+        verify(loanApplicationDao).getAllLoansApproved(eq(personalId));
     }
 
     @DataProvider
@@ -98,6 +80,6 @@ public class LoanServiceImplTest {
         String uid = "3e97f703c2703236";
         loanService.getLoanApplicationByUid(uid);
 
-        verify(loanApplicationDao, times(1)).getLoanApplicationByUid(eq(uid));
+        verify(loanApplicationDao).getLoanApplicationByUid(eq(uid));
     }
 }

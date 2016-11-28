@@ -1,7 +1,6 @@
 package my.homework.dao;
 
 import my.homework.service.LoanApplication;
-import my.homework.service.LoanApplicationStatus;
 
 import javax.annotation.Nullable;
 import java.math.BigDecimal;
@@ -15,7 +14,6 @@ public interface LoanApplicationDao {
         String surname,
         String term,
         BigDecimal amount,
-        LoanApplicationStatus status,
         String countryCode,
         String requestUid
     );
