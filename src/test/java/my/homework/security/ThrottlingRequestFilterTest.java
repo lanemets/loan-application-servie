@@ -107,6 +107,8 @@ public class ThrottlingRequestFilterTest {
         HttpServletRequest mockServletRequest = mock(HttpServletRequest.class);
         when(mockServletRequest.getPathInfo()).thenReturn(path);
         when(mockServletRequest.getRemoteAddr()).thenReturn(ipAddress);
+
+        when(mockServletRequest.getServletPath()).thenReturn(path);
         return mockServletRequest;
     }
 

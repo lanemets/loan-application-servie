@@ -1,6 +1,7 @@
 package my.homework.country;
 
 import com.google.common.cache.Cache;
+import java.util.concurrent.Callable;
 import my.homework.settings.GeoIpClientSettings;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -24,6 +25,8 @@ public class CountryCodeResolverImplTest {
     private GeoIpClientSettings geoIpClientSettings;
     @Mock
     private Cache<String, CountryInfo> countriesCache;
+    @Mock
+    private RestTemplate restTemplate;
 
     @BeforeMethod
     public void setUp() {
@@ -31,16 +34,17 @@ public class CountryCodeResolverImplTest {
         when(geoIpClientSettings.getUrl()).thenReturn(TEST_URL);
         when(geoIpClientSettings.getDefaultCountryCode()).thenReturn(TEST_DEFAULT_COUNTRY_CODE);
 
-        countryCodeResolver = new CountryCodeResolverImpl(geoIpClientSettings, countriesCache);
+        countryCodeResolver = new CountryCodeResolverImpl(geoIpClientSettings, countriesCache, restTemplate);
     }
 
+    @SuppressWarnings("unchecked")
     @Test(dataProvider = "resolveDataProvider")
     public void testResolve(String ipAddress, CountryInfo countryInfo) throws Exception {
-        when(countriesCache.getIfPresent(ipAddress)).thenReturn(countryInfo);
+        when(countriesCache.get(eq(ipAddress), any(Callable.class))).thenReturn(countryInfo);
 
         countryCodeResolver.resolve(ipAddress);
 
-        verify(countriesCache).getIfPresent(eq(ipAddress));
+        verify(countriesCache).get(eq(ipAddress), any(Callable.class));
     }
 
     @DataProvider

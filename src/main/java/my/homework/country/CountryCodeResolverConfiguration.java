@@ -15,11 +15,13 @@ public class CountryCodeResolverConfiguration {
     @Bean
     public CountryCodeResolver countryCodeResolver(
         GeoIpClientSettings geoIpClientSettings,
-        Cache<String, CountryInfo> countriesCache
+        Cache<String, CountryInfo> countriesCache,
+        RestTemplate restTemplate
     ) {
         return new CountryCodeResolverImpl(
             geoIpClientSettings,
-            countriesCache
+            countriesCache,
+            restTemplate
         );
     }
 

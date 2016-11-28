@@ -42,7 +42,7 @@ class ThrottlingRequestFilter extends GenericFilterBean {
         FilterChain filterChain
     ) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
-        if (httpRequest.getPathInfo().equals("/apply")) {
+        if (httpRequest.getServletPath().equals("/apply") || httpRequest.getPathInfo().equals("/apply")) {
 
             logger.debug("starting throttling check");
 
