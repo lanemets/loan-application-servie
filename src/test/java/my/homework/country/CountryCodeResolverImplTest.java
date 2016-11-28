@@ -1,17 +1,14 @@
 package my.homework.country;
 
 import com.google.common.cache.Cache;
-import java.util.concurrent.Callable;
 import my.homework.settings.GeoIpClientSettings;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.web.client.RestTemplate;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.net.SocketTimeoutException;
+import java.util.concurrent.Callable;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;

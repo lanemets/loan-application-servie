@@ -1,7 +1,8 @@
 package my.homework.common;
 
-import java.util.concurrent.ThreadLocalRandom;
 import org.apache.tomcat.util.buf.HexUtils;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 class LoanApplicationUuidGenerator implements UuidGenerator {
 

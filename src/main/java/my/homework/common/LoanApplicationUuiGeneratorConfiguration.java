@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 public class LoanApplicationUuiGeneratorConfiguration {
 
     @Bean
-    public LoanApplicationUuidGenerator loanApplicationUuidGenerator(){
+    public LoanApplicationUuidGenerator loanApplicationUuidGenerator() {
         return new LoanApplicationUuidGenerator();
     }
 }

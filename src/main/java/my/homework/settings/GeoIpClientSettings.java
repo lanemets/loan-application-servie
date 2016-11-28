@@ -10,24 +10,7 @@ public class GeoIpClientSettings {
 
     private String url;
     private String defaultCountryCode;
-    private int cacheExpirationDuration;
-    private String cacheExpirationUnit;
-
-    public int getCacheExpirationDuration() {
-        return cacheExpirationDuration;
-    }
-
-    public void setCacheExpirationDuration(int cacheExpirationDuration) {
-        this.cacheExpirationDuration = cacheExpirationDuration;
-    }
-
-    public String getCacheExpirationUnit() {
-        return cacheExpirationUnit;
-    }
-
-    public void setCacheExpirationUnit(String cacheExpirationUnit) {
-        this.cacheExpirationUnit = cacheExpirationUnit;
-    }
+    private int cacheMaximumSize;
 
     public String getUrl() {
         return url;
@@ -43,5 +26,13 @@ public class GeoIpClientSettings {
 
     public void setDefaultCountryCode(String defaultCountryCode) {
         this.defaultCountryCode = defaultCountryCode;
+    }
+
+    public int getCacheMaximumSize() {
+        return cacheMaximumSize;
+    }
+
+    public void setCacheMaximumSize(int cacheMaximumSize) {
+        this.cacheMaximumSize = cacheMaximumSize;
     }
 }

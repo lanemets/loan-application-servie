@@ -2,7 +2,7 @@ package my.homework.constant;
 
 public interface ErrorType {
 
-	String getKey();
+    String getKey();
 
-	int getCode();
+    int getCode();
 }

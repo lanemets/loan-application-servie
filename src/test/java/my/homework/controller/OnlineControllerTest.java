@@ -8,11 +8,12 @@ import my.homework.country.CountryCodeResolver;
 import my.homework.dao.BlackListDao;
 import my.homework.dao.LoanApplicationDao;
 import my.homework.security.SecurityConfiguration;
-import my.homework.settings.ThrottlingRequestSettings;
 import my.homework.service.BlackListServiceConfiguration;
 import my.homework.service.LoanApplication;
 import my.homework.service.LoanApplicationStatus;
 import my.homework.service.LoanServiceConfiguration;
+import my.homework.settings.ThreadPoolSettings;
+import my.homework.settings.ThrottlingRequestSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -292,6 +293,17 @@ public class OnlineControllerTest extends AbstractTestNGSpringContextTests {
         @Bean
         public CountryCodeResolver countryCodeResolver() {
             return mock(CountryCodeResolver.class);
+        }
+
+        @Bean
+        public ThreadPoolSettings threadPoolSettings() {
+            ThreadPoolSettings mockThreadPoolSettings = mock(ThreadPoolSettings.class);
+            when(mockThreadPoolSettings.getCorePoolSize()).thenReturn(10);
+            when(mockThreadPoolSettings.getMaxPoolSize()).thenReturn(10);
+            when(mockThreadPoolSettings.getQueueCapacity()).thenReturn(100);
+            when(mockThreadPoolSettings.getThreadNamePrefix()).thenReturn("TestThread-");
+
+            return mockThreadPoolSettings;
         }
     }
 
