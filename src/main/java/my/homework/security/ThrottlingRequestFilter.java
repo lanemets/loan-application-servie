@@ -3,6 +3,7 @@ package my.homework.security;
 import com.github.bucket4j.Bucket;
 import com.github.bucket4j.Buckets;
 import my.homework.country.CountryCodeResolver;
+import my.homework.settings.ThrottlingRequestSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.filter.GenericFilterBean;

@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>my.homework</groupId>
-    <artifactId>loan-manager</artifactId>
+    <artifactId>loan-application-manager</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>loan-manager</name>
-    <description>Simple loan manager app</description>
+    <name>loan-application-manager</name>
+    <description>Simple loan application manager app</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>

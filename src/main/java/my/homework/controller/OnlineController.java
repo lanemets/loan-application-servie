@@ -5,7 +5,7 @@ import my.homework.common.UuidGenerator;
 import my.homework.constant.ErrorResult;
 import my.homework.constant.ErrorTypes;
 import my.homework.constant.LoanResult;
-import my.homework.service.Loan;
+import my.homework.service.LoanApplication;
 import my.homework.service.LoanService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,7 +76,7 @@ class OnlineController {
     public LoanResult<?> getAllLoansApproved() {
         try {
             logger.debug("starting all loans approved retrieving;");
-            List<Loan> allLoansApproved = loanService.getAllLoansApproved(null);
+            List<LoanApplication> allLoansApproved = loanService.getAllLoansApproved(null);
             logger.debug("all loans approved retrieved successfully; loans retrieved count: {}", allLoansApproved.size());
             return new LoanResult<>(allLoansApproved, null);
         } catch (Exception exception) {
@@ -93,7 +93,7 @@ class OnlineController {
     public LoanResult<?> getAllLoansApprovedByPersonalId(@PathVariable("personal_id") String personalId) {
         try {
             logger.debug("starting all person's loans approved retrieving; personalId: {}", personalId);
-            List<Loan> allLoansApproved = loanService.getAllLoansApproved(Long.valueOf(personalId));
+            List<LoanApplication> allLoansApproved = loanService.getAllLoansApproved(Long.valueOf(personalId));
             logger.debug("person's loans approved has been retrieved successfully; loans retrieved count: {}", allLoansApproved.size());
             return new LoanResult<>(allLoansApproved, null);
         } catch (Exception exception) {
@@ -110,7 +110,7 @@ class OnlineController {
     public LoanResult<?> getLoanApplicationByUid(@PathVariable("application_uid") String applicationUid) {
         try {
             logger.debug("starting retrieving loan application by uid; uid: {}", applicationUid);
-            Loan loanApplicationByUid = loanService.getLoanApplicationByUid(applicationUid);
+            LoanApplication loanApplicationByUid = loanService.getLoanApplicationByUid(applicationUid);
             logger.debug("loan application has been retrieved successfully; loanApplication: {}", loanApplicationByUid);
             return new LoanResult<>(loanApplicationByUid, null);
         } catch (Exception exception) {

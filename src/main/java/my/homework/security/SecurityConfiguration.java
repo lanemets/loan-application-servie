@@ -1,6 +1,7 @@
 package my.homework.security;
 
 import my.homework.country.CountryCodeResolver;
+import my.homework.settings.ThrottlingRequestSettings;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -47,7 +48,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        //only for application request
         http.addFilterAfter(throttlingRequestFilter, BasicAuthenticationFilter.class);
     }
 }

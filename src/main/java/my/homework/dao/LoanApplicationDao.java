@@ -1,6 +1,6 @@
 package my.homework.dao;
 
-import my.homework.service.Loan;
+import my.homework.service.LoanApplication;
 import my.homework.service.LoanApplicationStatus;
 
 import javax.annotation.Nullable;
@@ -20,7 +20,7 @@ public interface LoanApplicationDao {
         String requestUid
     );
 
-    List<Loan> getAllLoansApproved(@Nullable Long personalId);
+    List<LoanApplication> getAllLoansApproved(@Nullable Long personalId);
 
-    Loan getLoanApplicationByUid(String applicationUid);
+    LoanApplication getLoanApplicationByUid(String applicationUid);
 }

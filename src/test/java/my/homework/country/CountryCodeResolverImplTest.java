@@ -1,6 +1,6 @@
 package my.homework.country;
 
-import my.homework.GeoIpClientSettings;
+import my.homework.settings.GeoIpClientSettings;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.web.client.RestTemplate;

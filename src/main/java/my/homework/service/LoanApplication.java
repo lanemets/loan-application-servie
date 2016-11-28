@@ -3,9 +3,8 @@ package my.homework.service;
 import com.google.common.base.Objects;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
-public class Loan {
+public class LoanApplication {
 
     private String term;
     private BigDecimal amount;
@@ -14,7 +13,7 @@ public class Loan {
     private Long personalId;
     private String requestUid;
 
-    public Loan(String term, BigDecimal amount, String personalName, String personalSurname, Long personalId, String requestUid) {
+    public LoanApplication(String term, BigDecimal amount, String personalName, String personalSurname, Long personalId, String requestUid) {
         this.term = term;
         this.amount = amount;
         this.personalName = personalName;
@@ -23,7 +22,7 @@ public class Loan {
         this.requestUid = requestUid;
     }
 
-    public Loan() {
+    public LoanApplication() {
     }
 
     public String getTerm() {
@@ -82,13 +81,13 @@ public class Loan {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Loan loan = (Loan) o;
-        return Objects.equal(term, loan.term) &&
-            Objects.equal(amount, loan.amount) &&
-            Objects.equal(personalName, loan.personalName) &&
-            Objects.equal(personalSurname, loan.personalSurname) &&
-            Objects.equal(personalId, loan.personalId) &&
-            Objects.equal(requestUid, loan.requestUid);
+        LoanApplication loanApplication = (LoanApplication) o;
+        return Objects.equal(term, loanApplication.term) &&
+            Objects.equal(amount, loanApplication.amount) &&
+            Objects.equal(personalName, loanApplication.personalName) &&
+            Objects.equal(personalSurname, loanApplication.personalSurname) &&
+            Objects.equal(personalId, loanApplication.personalId) &&
+            Objects.equal(requestUid, loanApplication.requestUid);
     }
 
     @Override

@@ -1,10 +1,14 @@
 package my.homework.country;
 
-import my.homework.GeoIpClientSettings;
-import my.homework.RestClientConfiguration;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import java.util.concurrent.TimeUnit;
+import my.homework.settings.GeoIpClientSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
+
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
@@ -13,28 +17,40 @@ class CountryCodeResolverImpl implements CountryCodeResolver {
     private static final Logger logger = LoggerFactory.getLogger(CountryCodeResolverImpl.class);
 
     private final GeoIpClientSettings geoIpClientSettings;
-    private final RestTemplate restTemplate;
+
+    private final Cache<String, CountryInfo> countriesCache;
 
     CountryCodeResolverImpl(
         GeoIpClientSettings geoIpClientSettings,
         RestTemplate restTemplate
     ) {
         this.geoIpClientSettings = geoIpClientSettings;
-        this.restTemplate = restTemplate;
+        this.countriesCache = CacheBuilder
+            .<String, CountryInfo>newBuilder()
+            .expireAfterWrite(
+                geoIpClientSettings.getCacheExpirationDuration(),
+                TimeUnit.valueOf(geoIpClientSettings.getCacheExpirationUnit())
+            ).build(
+                new CacheLoader<String, CountryInfo>() {
+                    @SuppressWarnings("NullableProblems")
+                    @Override
+                    public CountryInfo load(String ipAddress) throws Exception {
+                        return restTemplate.getForObject(
+                            geoIpClientSettings.getUrl(),
+                            CountryInfo.class,
+                            ipAddress
+                        );
+                    }
+                });
     }
 
     @Override
     public String resolve(String ipAddress) {
         try {
             logger.debug("starting resolving country by ip address; ipAddress: {}", ipAddress);
-
-            CountryInfo countryInfo = restTemplate.getForObject(
-                geoIpClientSettings.getUrl(),
-                CountryInfo.class,
-                ipAddress
-            );
-
+            CountryInfo countryInfo = countriesCache.getIfPresent(ipAddress);
             logger.debug("country resolving has succeeded; countryInfo: {}", countryInfo);
+
             String countryCode = countryInfo.getCountryCode();
             return isNullOrEmpty(countryCode) ? geoIpClientSettings.getDefaultCountryCode() : countryCode;
         } catch (Exception exception) {

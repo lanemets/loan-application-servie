@@ -1,7 +1,6 @@
 package my.homework.country;
 
-import my.homework.GeoIpClientSettings;
-import my.homework.RestClientConfiguration;
+import my.homework.settings.GeoIpClientSettings;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;

@@ -1,7 +1,7 @@
 package my.homework.dao;
 
 import com.google.common.collect.Lists;
-import my.homework.service.Loan;
+import my.homework.service.LoanApplication;
 import my.homework.service.LoanApplicationStatus;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -53,8 +53,8 @@ class LoanApplicationDaoImpl implements LoanApplicationDao {
     }
 
     @Override
-    public List<Loan> getAllLoansApproved(@Nullable Long personalId) {
-        List<Loan> loansApproved = Lists.newArrayList();
+    public List<LoanApplication> getAllLoansApproved(@Nullable Long personalId) {
+        List<LoanApplication> loansApproved = Lists.newArrayList();
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
             .addValue("p_status", LoanApplicationStatus.OK.getValue());
 
@@ -68,7 +68,7 @@ class LoanApplicationDaoImpl implements LoanApplicationDao {
             query,
             mapSqlParameterSource,
             (resultSet, rowNum) -> loansApproved.add(
-                new Loan(
+                new LoanApplication(
                     resultSet.getString("term"),
                     resultSet.getBigDecimal("amount"),
                     resultSet.getString("name"),
@@ -83,15 +83,15 @@ class LoanApplicationDaoImpl implements LoanApplicationDao {
     }
 
     @Override
-    public Loan getLoanApplicationByUid(String applicationUid) {
+    public LoanApplication getLoanApplicationByUid(String applicationUid) {
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
             .addValue("p_request_uid", applicationUid);
-        Loan loan;
+        LoanApplication loanApplication;
         try {
-            loan = namedParameterJdbcTemplate.queryForObject(
+            loanApplication = namedParameterJdbcTemplate.queryForObject(
                 SQL_GET_LOAN_BY_UID,
                 mapSqlParameterSource,
-                (resultSet, rowNum) -> new Loan(
+                (resultSet, rowNum) -> new LoanApplication(
                     resultSet.getString("term"),
                     resultSet.getBigDecimal("amount"),
                     resultSet.getString("name"),
@@ -103,7 +103,7 @@ class LoanApplicationDaoImpl implements LoanApplicationDao {
         } catch (EmptyResultDataAccessException exception) {
             return null;
         }
-        return loan;
+        return loanApplication;
     }
 
     private static final String SQL_GET_ALL_LOANS_APPROVED =

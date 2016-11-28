@@ -8,9 +8,9 @@ import my.homework.country.CountryCodeResolver;
 import my.homework.dao.BlackListDao;
 import my.homework.dao.LoanApplicationDao;
 import my.homework.security.SecurityConfiguration;
-import my.homework.security.ThrottlingRequestSettings;
+import my.homework.settings.ThrottlingRequestSettings;
 import my.homework.service.BlackListServiceConfiguration;
-import my.homework.service.Loan;
+import my.homework.service.LoanApplication;
 import my.homework.service.LoanApplicationStatus;
 import my.homework.service.LoanServiceConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -166,7 +166,7 @@ public class OnlineControllerTest extends AbstractTestNGSpringContextTests {
 
     @SuppressWarnings("unchecked")
     @Test(dataProvider = "getLoansApprovedDataProvider")
-    public void testGetLoansApproved(List<Loan> loansApproved, String response) throws Exception {
+    public void testGetLoansApproved(List<LoanApplication> loansApproved, String response) throws Exception {
         when(loanApplicationDao.getAllLoansApproved(anyLong())).thenReturn(loansApproved);
 
         mockMvc.perform(createRequestBuilder(URL_GET_APPROVED))
@@ -181,8 +181,8 @@ public class OnlineControllerTest extends AbstractTestNGSpringContextTests {
         return new Object[][]{
             {
                 ImmutableList.of(
-                    new Loan("TEST_TERM", BigDecimal.valueOf(100L), "TEST_NAME", "TEST_SURNAME", 123L, "TEST_UUID"),
-                    new Loan("TEST_TERM", BigDecimal.valueOf(100L), "TEST_NAME", "TEST_SURNAME", 456L, "ANOTHER_TEST_UUID")
+                    new LoanApplication("TEST_TERM", BigDecimal.valueOf(100L), "TEST_NAME", "TEST_SURNAME", 123L, "TEST_UUID"),
+                    new LoanApplication("TEST_TERM", BigDecimal.valueOf(100L), "TEST_NAME", "TEST_SURNAME", 456L, "ANOTHER_TEST_UUID")
                 ),
                 Resources.toString(getResource("response-get-loans-approved.json"), UTF_8)
             },
@@ -195,7 +195,7 @@ public class OnlineControllerTest extends AbstractTestNGSpringContextTests {
 
     @SuppressWarnings("unchecked")
     @Test(dataProvider = "getLoansApprovedByUserDataProvider")
-    public void testGetLoansApprovedByPerson(List<Loan> loansApproved, Long personalId, String response) throws Exception {
+    public void testGetLoansApprovedByPerson(List<LoanApplication> loansApproved, Long personalId, String response) throws Exception {
         when(loanApplicationDao.getAllLoansApproved(eq(personalId))).thenReturn(loansApproved);
         mockMvc.perform(
             createRequestBuilder(URL_GET_APPROVED + "/{personal_id}", personalId))
@@ -210,7 +210,7 @@ public class OnlineControllerTest extends AbstractTestNGSpringContextTests {
         return new Object[][]{
             {
                 ImmutableList.of(
-                    new Loan("TEST_TERM", BigDecimal.valueOf(100L), "TEST_NAME", "TEST_SURNAME", 123L, "TEST_UUID")
+                    new LoanApplication("TEST_TERM", BigDecimal.valueOf(100L), "TEST_NAME", "TEST_SURNAME", 123L, "TEST_UUID")
                 ),
                 123L,
                 Resources.toString(getResource("response-get-loans-approved-by-user.json"), UTF_8)
@@ -225,7 +225,7 @@ public class OnlineControllerTest extends AbstractTestNGSpringContextTests {
 
     @SuppressWarnings("unchecked")
     @Test(dataProvider = "getLoanByUidDatProvider")
-    public void testGetLoanByUid(Loan loansFound, String applicationUid, String response) throws Exception {
+    public void testGetLoanByUid(LoanApplication loansFound, String applicationUid, String response) throws Exception {
         when(loanApplicationDao.getLoanApplicationByUid(eq(applicationUid))).thenReturn(loansFound);
 
         mockMvc.perform(
@@ -240,7 +240,7 @@ public class OnlineControllerTest extends AbstractTestNGSpringContextTests {
     public static Object[][] getLoanByUidDatProvider() throws IOException {
         return new Object[][]{
             {
-                new Loan("TEST_TERM", BigDecimal.valueOf(100L), "TEST_NAME", "TEST_SURNAME", 123L, "TEST_UUID"),
+                new LoanApplication("TEST_TERM", BigDecimal.valueOf(100L), "TEST_NAME", "TEST_SURNAME", 123L, "TEST_UUID"),
                 "TEST_UUID",
                 Resources.toString(getResource("response-get-loan-by-uid.json"), UTF_8)
             },
