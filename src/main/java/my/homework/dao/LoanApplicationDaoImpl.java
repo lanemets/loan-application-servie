@@ -1,18 +1,17 @@
 package my.homework.dao;
 
 import com.google.common.collect.Lists;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+import javax.annotation.Nullable;
+import javax.sql.DataSource;
 import my.homework.service.LoanApplication;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-
-import javax.annotation.Nullable;
-import javax.sql.DataSource;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
 
 class LoanApplicationDaoImpl implements LoanApplicationDao {
 

@@ -1,8 +1,7 @@
 package my.homework.dao;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-
 import javax.sql.DataSource;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 class BlackListDaoImpl implements BlackListDao {
 

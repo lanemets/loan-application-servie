@@ -1,9 +1,8 @@
 package my.homework;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import javax.validation.constraints.NotNull;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LoanApplicationRequest {

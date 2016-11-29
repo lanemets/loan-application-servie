@@ -1,5 +1,7 @@
 package my.homework.controller;
 
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import my.homework.LoanApplicationRequest;
 import my.homework.common.UuidGenerator;
 import my.homework.constant.ErrorResult;
@@ -9,15 +11,18 @@ import my.homework.constant.LoanResult;
 import my.homework.exception.BlackListedPersonIdException;
 import my.homework.service.BlackListService;
 import my.homework.service.LoanApplication;
-import my.homework.service.LoanService;;
+import my.homework.service.LoanService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+;
 
 @RestController
 class OnlineController {

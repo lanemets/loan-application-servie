@@ -1,9 +1,8 @@
 package my.homework.service;
 
-import my.homework.LoanApplicationRequest;
-
-import javax.annotation.Nullable;
 import java.util.List;
+import javax.annotation.Nullable;
+import my.homework.LoanApplicationRequest;
 
 public interface LoanService {
 

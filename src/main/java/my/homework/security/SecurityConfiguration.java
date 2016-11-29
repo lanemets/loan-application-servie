@@ -2,17 +2,18 @@ package my.homework.security;
 
 import my.homework.country.CountryCodeResolver;
 import my.homework.settings.ThrottlingRequestSettings;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+@Import(SecurityConfiguration.HttpSecurityConfiguration.class)
+public class SecurityConfiguration {
 
     private ThrottlingRequestFilter throttlingRequestFilter;
 
@@ -30,25 +31,32 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new ThrottlingRequestFilter(countryCodeResolver, throttlingRequestSettings);
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    public FilterRegistrationBean throttlingFilterRegistrationBean() {
+        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+        filterRegistrationBean.setFilter(throttlingRequestFilter);
+        filterRegistrationBean.addUrlPatterns("/apply");
 
-        http.addFilterAfter(throttlingRequestFilter, BasicAuthenticationFilter.class)
-            .antMatcher("/apply");
-
-        http.authorizeRequests().antMatchers("/**").authenticated().and().httpBasic();
-
-        http.csrf().disable();
-        http.headers().frameOptions().disable();
-
-        http
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
+        return filterRegistrationBean;
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("user").password("password").roles("USER");
+    @Configuration
+    @EnableWebSecurity
+    static class HttpSecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http.authorizeRequests()
+                .anyRequest()
+                .authenticated()
+                .and()
+                .httpBasic();
+
+            http.csrf().disable();
+            http
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        }
     }
 }

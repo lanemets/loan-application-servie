@@ -1,7 +1,6 @@
 package my.homework.service;
 
 import com.google.common.base.Objects;
-
 import java.math.BigDecimal;
 
 public class LoanApplication {

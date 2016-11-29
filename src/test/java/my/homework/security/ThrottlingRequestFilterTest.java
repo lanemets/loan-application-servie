@@ -43,13 +43,12 @@ public class ThrottlingRequestFilterTest {
 
     @Test(dataProvider = "filterDataProvider")
     public void testFilter(
-        String path,
         String ipAddress,
         String countryCode,
         Bucket mockBucket,
         boolean bucketConsumes
     ) throws IOException, ServletException {
-        HttpServletRequest mockHttpServletRequest = mockHttpRequest(path, ipAddress);
+        HttpServletRequest mockHttpServletRequest = mockHttpRequest(ipAddress);
         HttpServletResponse mockHttpServletResponse = mockHttpServletResponse();
 
         HttpSession mockHttpSession = mockSession(mockHttpServletRequest);
@@ -80,14 +79,12 @@ public class ThrottlingRequestFilterTest {
     public static Object[][] filterDataProvider() {
         return new Object[][]{
             {
-                "/apply",
                 "268.90.45.1",
                 "US",
                 createBucket(true),
                 true
             },
             {
-                "/apply",
                 "268.90.45.1",
                 "US",
                 createBucket(false),
@@ -103,12 +100,9 @@ public class ThrottlingRequestFilterTest {
         when(throttlingRequestSettings.getTimeUnit()).thenReturn("MINUTES");
     }
 
-    private HttpServletRequest mockHttpRequest(String path, String ipAddress) {
+    private HttpServletRequest mockHttpRequest(String ipAddress) {
         HttpServletRequest mockServletRequest = mock(HttpServletRequest.class);
-        when(mockServletRequest.getPathInfo()).thenReturn(path);
         when(mockServletRequest.getRemoteAddr()).thenReturn(ipAddress);
-
-        when(mockServletRequest.getServletPath()).thenReturn(path);
         return mockServletRequest;
     }
 

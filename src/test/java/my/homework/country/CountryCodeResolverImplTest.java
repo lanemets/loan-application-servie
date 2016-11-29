@@ -1,6 +1,7 @@
 package my.homework.country;
 
 import com.google.common.cache.Cache;
+import java.util.concurrent.Callable;
 import my.homework.settings.GeoIpClientSettings;
 import org.mockito.Mock;
 import org.springframework.web.client.RestTemplate;
@@ -8,10 +9,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.util.concurrent.Callable;
 
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.testng.Assert.assertEquals;
 

@@ -1,9 +1,6 @@
 package my.homework.country;
 
 import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import java.util.concurrent.TimeUnit;
 import my.homework.settings.GeoIpClientSettings;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

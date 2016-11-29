@@ -1,6 +1,6 @@
 package my.homework.constant;
 
-public interface HasCode {
+interface HasCode {
 
     int getCode();
 }

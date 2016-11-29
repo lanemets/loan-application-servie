@@ -1,14 +1,13 @@
 package my.homework.service;
 
+import java.util.List;
+import javax.annotation.Nullable;
 import my.homework.LoanApplicationRequest;
 import my.homework.dao.LoanApplicationDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.annotation.Nullable;
-import java.util.List;
 
 class LoanServiceImpl implements LoanService {
 

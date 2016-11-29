@@ -2,6 +2,9 @@ package my.homework.controller;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Resources;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.List;
 import my.homework.LoanApplicationRequest;
 import my.homework.common.UuidGenerator;
 import my.homework.country.CountryCodeResolver;
@@ -27,16 +30,17 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.List;
 
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.io.Resources.getResource;
 import static com.google.common.net.HttpHeaders.AUTHORIZATION;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -92,7 +96,7 @@ public class OnlineControllerTest extends AbstractTestNGSpringContextTests {
 
         verify(blackListService).checkBlackListed(eq(loanApplicationRequest.getPersonalId()));
 
-        //NOTE: simple workaround for async method testing
+        //NOTE: stupid workaround for async method testing
         Thread.sleep(200);
 
         verify(loanApplicationDao).addLoanApplication(

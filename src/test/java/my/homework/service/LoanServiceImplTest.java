@@ -1,5 +1,6 @@
 package my.homework.service;
 
+import java.math.BigDecimal;
 import my.homework.LoanApplicationRequest;
 import my.homework.dao.LoanApplicationDao;
 import org.mockito.InjectMocks;
@@ -8,7 +9,6 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.math.BigDecimal;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
