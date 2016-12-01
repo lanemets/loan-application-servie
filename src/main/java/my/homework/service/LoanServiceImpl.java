@@ -53,6 +53,7 @@ class LoanServiceImpl implements LoanService {
     }
 
     @Override
+    @Transactional
     public LoanApplication getLoanApplicationByUid(String applicationUid) {
         return loanApplicationDao.getLoanApplicationByUid(applicationUid);
     }
