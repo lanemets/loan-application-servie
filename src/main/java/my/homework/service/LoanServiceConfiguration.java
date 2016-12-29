@@ -9,8 +9,9 @@ public class LoanServiceConfiguration {
 
     @Bean
     public LoanService loanService(
-        LoanApplicationDao loanApplicationDao
+        LoanApplicationDao loanApplicationDao,
+        BlackListService blackListService
     ) {
-        return new LoanServiceImpl(loanApplicationDao);
+        return new LoanServiceImpl(loanApplicationDao, blackListService);
     }
 }

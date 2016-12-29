@@ -1,4 +1,4 @@
-package my.homework;
+package my.homework.constant;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;

@@ -2,14 +2,13 @@ package my.homework.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
-import my.homework.LoanApplicationRequest;
+import my.homework.constant.LoanApplicationRequest;
 import my.homework.common.UuidGenerator;
 import my.homework.constant.ErrorResult;
 import my.homework.constant.ErrorType;
 import my.homework.constant.ErrorTypes;
 import my.homework.constant.LoanResult;
 import my.homework.exception.BlackListedPersonIdException;
-import my.homework.service.BlackListService;
 import my.homework.service.LoanApplication;
 import my.homework.service.LoanService;
 import org.slf4j.Logger;
@@ -28,17 +27,14 @@ class OnlineController {
     private static final Logger logger = LoggerFactory.getLogger(OnlineController.class);
 
     private final LoanService loanService;
-    private final BlackListService blackListService;
     private final UuidGenerator uuidGenerator;
 
     @Autowired
     public OnlineController(
         LoanService loanService,
-        BlackListService blackListService,
         UuidGenerator loanApplicationUuidGenerator
     ) {
         this.loanService = loanService;
-        this.blackListService = blackListService;
         this.uuidGenerator = loanApplicationUuidGenerator;
     }
 
@@ -55,13 +51,12 @@ class OnlineController {
         try {
             logger.debug("starting loan application request processing; personalId: {}", loanApplicationRequest.getPersonalId());
 
-            blackListService.checkBlackListed(loanApplicationRequest.getPersonalId());
-            String countryCode = String.valueOf(httpServletRequest.getAttribute("country_code"));
-
+            String countryCode = String.valueOf(httpServletRequest.getAttribute(COUNTRY_CODE_ATTRIBUTE_NAME));
             String requestUuid = uuidGenerator.generate();
             loanService.apply(loanApplicationRequest, countryCode, requestUuid);
+
             logger.debug(
-                "loan application request processed successfully; personalId: {}, requestUid: {}",
+                "loan application request has been applied successfully; personalId: {}, requestUid: {}",
                 loanApplicationRequest.getPersonalId(),
                 requestUuid
             );
@@ -69,11 +64,10 @@ class OnlineController {
         } catch (BlackListedPersonIdException exception) {
             logger.error(
                 String.format(
-                    "person with given personal id is blacklisted; personalId: %s",
+                    "person with given personal id has been blacklisted; personalId: %s",
                     loanApplicationRequest.getPersonalId()
                 )
             );
-
             return new LoanResult<>(null, createErrorResult(exception, ErrorTypes.BLACKLISTED));
         } catch (Exception exception) {
             logger.error(
@@ -83,7 +77,6 @@ class OnlineController {
                 ),
                 exception
             );
-
             return new LoanResult<String>(null, createErrorResult(exception, ErrorTypes.UNKNOWN));
         }
     }
@@ -96,7 +89,9 @@ class OnlineController {
     public LoanResult<?> getAllLoansApproved() {
         try {
             logger.debug("starting all loans approved retrieving;");
+
             List<LoanApplication> allLoansApproved = loanService.getAllLoansApproved(null);
+
             logger.debug("all loans approved retrieved successfully; loans retrieved count: {}", allLoansApproved.size());
             return new LoanResult<>(allLoansApproved, null);
         } catch (Exception exception) {
@@ -113,7 +108,9 @@ class OnlineController {
     public LoanResult<?> getAllLoansApprovedByPersonalId(@PathVariable("personal_id") String personalId) {
         try {
             logger.debug("starting all person's loans approved retrieving; personalId: {}", personalId);
+
             List<LoanApplication> allLoansApproved = loanService.getAllLoansApproved(Long.valueOf(personalId));
+
             logger.debug("person's loans approved has been retrieved successfully; loans retrieved count: {}", allLoansApproved.size());
             return new LoanResult<>(allLoansApproved, null);
         } catch (Exception exception) {
@@ -130,7 +127,9 @@ class OnlineController {
     public LoanResult<?> getLoanApplicationByUid(@PathVariable("application_uid") String applicationUid) {
         try {
             logger.debug("starting retrieving loan application by uid; uid: {}", applicationUid);
+
             LoanApplication loanApplicationByUid = loanService.getLoanApplicationByUid(applicationUid);
+
             logger.debug("loan application has been retrieved successfully; loanApplication: {}", loanApplicationByUid);
             return new LoanResult<>(loanApplicationByUid, null);
         } catch (Exception exception) {
@@ -142,4 +141,6 @@ class OnlineController {
     private static ErrorResult createErrorResult(Exception exception, ErrorType errorType) {
         return new ErrorResult(errorType.getCode(), exception.getMessage());
     }
+
+    private static final String COUNTRY_CODE_ATTRIBUTE_NAME = "country_code";
 }

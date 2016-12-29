@@ -10,16 +10,16 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @SpringBootApplication
 @EnableAsync
-public class LoanManagerApplication extends AsyncConfigurerSupport {
+public class Application extends AsyncConfigurerSupport {
 
     private final ThreadPoolSettings threadPoolSettings;
 
-    public LoanManagerApplication(ThreadPoolSettings threadPoolSettings) {
+    public Application(ThreadPoolSettings threadPoolSettings) {
         this.threadPoolSettings = threadPoolSettings;
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(LoanManagerApplication.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
     @Override
