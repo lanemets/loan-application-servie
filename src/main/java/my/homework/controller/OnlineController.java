@@ -52,7 +52,7 @@ class OnlineController {
             logger.debug("starting loan application request processing; personalId: {}", loanApplicationRequest.getPersonalId());
 
             String countryCode = String.valueOf(httpServletRequest.getAttribute(COUNTRY_CODE_ATTRIBUTE_NAME));
-            String requestUuid = uuidGenerator.generate();
+            String requestUuid = uuidGenerator.generate("requestUuid");
             loanService.apply(loanApplicationRequest, countryCode, requestUuid);
 
             logger.debug(

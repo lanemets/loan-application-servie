@@ -2,11 +2,10 @@ package my.homework.controller;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Resources;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.List;
-import my.homework.constant.LoanApplicationRequest;
+import my.homework.common.LoanTracingContext;
+import my.homework.common.MdcWrapper;
 import my.homework.common.UuidGenerator;
+import my.homework.constant.LoanApplicationRequest;
 import my.homework.country.CountryCodeResolver;
 import my.homework.exception.BlackListedPersonIdException;
 import my.homework.security.SecurityConfiguration;
@@ -28,6 +27,10 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static com.google.common.base.Charsets.UTF_8;
 import static com.google.common.io.Resources.getResource;
@@ -36,11 +39,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -59,11 +58,13 @@ public class OnlineControllerTest extends AbstractTestNGSpringContextTests {
     @Autowired
     private CountryCodeResolver countryCodeResolver;
     @Autowired
+    private MdcWrapper mdcWrapper;
+    @Autowired
     private MockMvc mockMvc;
 
     @AfterMethod
     public void resetMocks() {
-        reset(loanService, countryCodeResolver);
+        reset(loanService, countryCodeResolver, mdcWrapper);
     }
 
     @Test(dataProvider = "applyDataProvider")
@@ -81,6 +82,9 @@ public class OnlineControllerTest extends AbstractTestNGSpringContextTests {
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .content(request)
             .header(AUTHORIZATION, BASIC_AUTH_HEADER_VALUE)
+            .header(TRACE_ID, TRACE_ID)
+            .header(SPAN_ID, SPAN_ID)
+            .header(PARENT_SPAN_ID, PARENT_SPAN_ID)
             .with(
                 mockHttpServletRequest -> {
                     mockHttpServletRequest.setRemoteAddr(ipAddress);
@@ -91,11 +95,23 @@ public class OnlineControllerTest extends AbstractTestNGSpringContextTests {
             .andExpect(status().isOk())
             .andExpect(content().json(response, true));
 
+        verify(mdcWrapper).enter(
+            eq(
+                new LoanTracingContext(
+                    TRACE_ID,
+                    SPAN_ID + "Generated",
+                    SPAN_ID
+                )
+            )
+        );
+
         verify(loanService).apply(
             eq(loanApplicationRequest),
             eq(countryCode),
             eq(requestUuid)
         );
+
+        verify(mdcWrapper).exit();
     }
 
     @DataProvider
@@ -175,8 +191,8 @@ public class OnlineControllerTest extends AbstractTestNGSpringContextTests {
         return new Object[][]{
             {
                 ImmutableList.of(
-                    new LoanApplication("TEST_TERM", BigDecimal.valueOf(100L), "TEST_NAME", "TEST_SURNAME", 123L, "TEST_UUID"),
-                    new LoanApplication("TEST_TERM", BigDecimal.valueOf(100L), "TEST_NAME", "TEST_SURNAME", 456L, "ANOTHER_TEST_UUID")
+                    new LoanApplication("TEST_TERM", BigDecimal.valueOf(100L), "TEST_NAME", "TEST_SURNAME", 123L, TEST_UUID),
+                    new LoanApplication("TEST_TERM", BigDecimal.valueOf(100L), "TEST_NAME", "TEST_SURNAME", 456L, TEST_UUID)
                 ),
                 Resources.toString(getResource("response-get-loans-approved.json"), UTF_8)
             },
@@ -204,7 +220,7 @@ public class OnlineControllerTest extends AbstractTestNGSpringContextTests {
         return new Object[][]{
             {
                 ImmutableList.of(
-                    new LoanApplication("TEST_TERM", BigDecimal.valueOf(100L), "TEST_NAME", "TEST_SURNAME", 123L, "TEST_UUID")
+                    new LoanApplication("TEST_TERM", BigDecimal.valueOf(100L), "TEST_NAME", "TEST_SURNAME", 123L, TEST_UUID)
                 ),
                 123L,
                 Resources.toString(getResource("response-get-loans-approved-by-user.json"), UTF_8)
@@ -234,13 +250,13 @@ public class OnlineControllerTest extends AbstractTestNGSpringContextTests {
     public static Object[][] getLoanByUidDatProvider() throws IOException {
         return new Object[][]{
             {
-                new LoanApplication("TEST_TERM", BigDecimal.valueOf(100L), "TEST_NAME", "TEST_SURNAME", 123L, "TEST_UUID"),
-                "TEST_UUID",
+                new LoanApplication("TEST_TERM", BigDecimal.valueOf(100L), "TEST_NAME", "TEST_SURNAME", 123L, TEST_UUID),
+                TEST_UUID,
                 Resources.toString(getResource("response-get-loan-by-uid.json"), UTF_8)
             },
             {
                 null,
-                "TEST_UUID",
+                TEST_UUID,
                 "{\"result\":null,\"errorResult\":null}"
             }
         };
@@ -261,19 +277,11 @@ public class OnlineControllerTest extends AbstractTestNGSpringContextTests {
         }
 
         @Bean
-        public UuidGenerator uuidGenerator() {
-            UuidGenerator mockUuidGenerator = mock(UuidGenerator.class);
-            when(mockUuidGenerator.generate()).thenReturn(TEST_UUID);
-
-            return mockUuidGenerator;
-        }
-
-        @Bean
         public ThrottlingRequestSettings throttlingRequestSettings() {
             ThrottlingRequestSettings mockThrottlingRequestSettings = mock(ThrottlingRequestSettings.class);
             when(mockThrottlingRequestSettings.getMaxCapacity()).thenReturn(1);
             when(mockThrottlingRequestSettings.getPeriod()).thenReturn(1);
-            when(mockThrottlingRequestSettings.getTimeUnit()).thenReturn("MILLISECONDS");
+            when(mockThrottlingRequestSettings.getTimeUnit()).thenReturn(TimeUnit.MILLISECONDS.name());
 
             return mockThrottlingRequestSettings;
         }
@@ -293,6 +301,16 @@ public class OnlineControllerTest extends AbstractTestNGSpringContextTests {
 
             return mockThreadPoolSettings;
         }
+
+        @Bean
+        public MdcWrapper mdcWrapper() {
+            return mock(MdcWrapper.class);
+        }
+
+        @Bean
+        public UuidGenerator uuidGenerator() {
+            return name -> name + "Generated";
+        }
     }
 
     private static final String TEST_IP_ADDRESS = "208.80.152.201";
@@ -301,6 +319,11 @@ public class OnlineControllerTest extends AbstractTestNGSpringContextTests {
     private static final String URL_GET_APPROVED = "/loans_approved";
     private static final String URL_GET_BY_UID = "/loans_applications";
 
-    private static final String TEST_UUID = "TEST_UUID";
+    private static final String TEST_UUID = "requestUuidGenerated";
     private static final String BASIC_AUTH_HEADER_VALUE = "Basic dXNlcjpRd2VydHkxMg==";
+
+    private static final String TRACE_ID = "X-B3-TraceId";
+    private static final String SPAN_ID = "X-B3-SpanId";
+    private static final String PARENT_SPAN_ID = "X-B3-ParentSpanId";
+
 }
